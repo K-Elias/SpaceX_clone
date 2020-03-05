@@ -1,0 +1,26 @@
+{
+    "presets": [
+        "@babel/preset-react"
+    ],
+    "plugins": [
+        [
+            "@babel/plugin-proposal-class-properties",
+            {},
+            "class"
+        ],
+        [
+            "@babel/plugin-proposal-object-rest-spread",
+            {},
+            "spread"
+        ],
+        [
+            "@babel/plugin-transform-runtime",
+            {},
+            "runtime"
+        ],
+        [
+            "babel-plugin-styled-components",
+            "styled-component"
+        ]
+    ]
+}
