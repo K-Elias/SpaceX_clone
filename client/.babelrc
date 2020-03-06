@@ -1,6 +1,14 @@
 {
     "presets": [
-        "@babel/preset-react"
+        [
+            "@babel/preset-react",
+            {
+                "useBuiltIns": "usage",
+                "targets": {
+                    "node": "current"
+                }
+            }
+        ]
     ],
     "plugins": [
         [

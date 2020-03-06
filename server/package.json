@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
+  "private": true,
   "scripts": {
     "test": "echo 'we should do smth with jest'",
     "start": "nodemon -r esm ./src/index.js"
@@ -10,6 +11,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">= 10.0.0",
+    "npm": ">= 6.0.0"
+  },
   "dependencies": {
     "apollo-datasource": "^0.7.0",
     "apollo-datasource-rest": "^0.8.0",
@@ -23,10 +28,6 @@
     "sqlite3": "^4.1.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.7",
-    "@babel/plugin-transform-runtime": "^7.8.3",
-    "@babel/preset-env": "^7.8.7",
     "esm": "^3.2.25",
     "nodemon": "^2.0.2"
   }
