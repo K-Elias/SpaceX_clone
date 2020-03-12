@@ -1,14 +1,14 @@
 {
     "presets": [
         [
-            "@babel/preset-react",
+            "@babel/preset-env",
             {
-                "useBuiltIns": "usage",
                 "targets": {
                     "node": "current"
                 }
             }
-        ]
+        ],
+        "@babel/preset-react"
     ],
     "plugins": [
         [
@@ -22,12 +22,15 @@
             "spread"
         ],
         [
-            "@babel/plugin-transform-runtime",
+            "@babel/plugin-syntax-dynamic-import",
             {},
-            "runtime"
+            "import"
         ],
         [
             "babel-plugin-styled-components",
+            {
+                "pure": true
+            },
             "styled-component"
         ]
     ]
