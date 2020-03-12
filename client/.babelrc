@@ -12,21 +12,6 @@
     ],
     "plugins": [
         [
-            "@babel/plugin-proposal-class-properties",
-            {},
-            "class"
-        ],
-        [
-            "@babel/plugin-proposal-object-rest-spread",
-            {},
-            "spread"
-        ],
-        [
-            "@babel/plugin-syntax-dynamic-import",
-            {},
-            "import"
-        ],
-        [
             "babel-plugin-styled-components",
             {
                 "pure": true

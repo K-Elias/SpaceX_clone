@@ -6,7 +6,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import ScriptExtHtmlWebpackPlugin from 'script-ext-html-webpack-plugin';
-import CompressionPlugin from 'compression-webpack-plugin'
+import CompressionPlugin from 'compression-webpack-plugin';
 
 const mode = process.env.NODE_ENV;
 
@@ -15,8 +15,12 @@ const entry = path.resolve(__dirname, 'src/index.js');
 const output = {
   path: path.join(__dirname, 'dist'),
   filename: mode === 'production' ?
-    '[name]-bundle-[hash].js' : '[name].js'
+    '[name]-bundle-[hash].js' : '[name].js',
+  chunkFilename: mode === 'production' ?
+    '[name].chunkhash.bundle.js' : '[name].js'
 };
+
+
 
 const resolve = {
   extensions: ['.js', '.jsx', '.json'],
@@ -73,12 +77,25 @@ const module = {
   ]
 };
 
+const devtool = mode === 'development' ?
+  'eval-source-map' : false;
+
+const showComments = mode === 'production' ? {
+  extractComments: false,
+  terserOptions: {
+    output: {
+      comments: false,
+    }
+  }
+} : {};
+
 const optimization = {
-  minimize: mode === 'production',
+  minimize: true,
   minimizer: [
     new TerserPlugin({
-      parallel: true,
-      sourceMap: true
+      ...showComments,
+      sourceMap: mode === 'development',
+      parallel: true
     }),
     new OptimizeCSSAssetsPlugin({})
   ],
@@ -86,27 +103,47 @@ const optimization = {
   runtimeChunk: 'single',
   splitChunks: {
     chunks: 'all',
-    maxInitialRequests: Infinity,
-    minSize: 0,
+    maxInitialRequests: 20,
+    maxAsyncRequests: 20,
+    minSize: 40,
     cacheGroups: {
       default: false,
       vendors: false,
       vendor: {
-        chunks: 'all',
-        test: /node_modules/
+        test: /node_modules/,
+        name: 'vendor',
+        priority: 20,
+        chunks: 'all'
       },
-    },
-  },
+      common: {
+        test: /node_modules/,
+        name: 'common',
+        minChunks: 2,
+        chunks: 'async',
+        priority: 10,
+        reuseExistingChunk: true
+      }
+    }
+  }
 };
 
-const plugins = [
+const prod_plugins = (mode === 'production' ? [
   new CleanWebpackPlugin({}),
-  new SourceMapDevToolPlugin({
-    filename: '[name].js.map'
+  new CompressionPlugin({
+    cache: true
   }),
-  new CompressionPlugin({}),
+] : [
+  new SourceMapDevToolPlugin({
+    filename: '[name].js.map',
+    exclude: ['vendor.js']
+  })
+]);
+
+const plugins = [
+  ...prod_plugins,
   new MiniCssExtractPlugin({
-    filename: '[name].css',
+    filename: mode === 'production' ?
+      '[name]-[contenthash].css' : '[name].css',
     chunkFilename: '[id].css'
   }),
   new HtmlWebpackPlugin({
@@ -135,6 +172,7 @@ export default {
   entry,
   output,
   resolve,
+  devtool,
   module,
   optimization,
   plugins
