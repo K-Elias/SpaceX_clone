@@ -103,25 +103,20 @@ const optimization = {
   runtimeChunk: 'single',
   splitChunks: {
     chunks: 'all',
-    maxInitialRequests: 20,
-    maxAsyncRequests: 20,
-    minSize: 40,
     cacheGroups: {
-      default: false,
-      vendors: false,
       vendor: {
         test: /node_modules/,
         name: 'vendor',
-        priority: 20,
-        chunks: 'all'
+        chunks: 'all',
+        priority: 20
       },
-      common: {
-        test: /node_modules/,
-        name: 'common',
+      commons: {
+        name: 'commons',
         minChunks: 2,
         chunks: 'async',
         priority: 10,
-        reuseExistingChunk: true
+        reuseExistingChunk: true,
+        enforce: true
       }
     }
   }
