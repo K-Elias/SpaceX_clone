@@ -1,7 +1,10 @@
 import { ApolloServer } from 'apollo-server-express';
-import express from 'express';
 import { config } from 'dotenv';
+import express from 'express';
 import isEmail from 'isemail';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
 
 import { createStore } from './utils';
 import typeDefs from './schema';
@@ -12,8 +15,14 @@ import LaunchAPI from './datasources/launches';
 config();
 const { PORT } = process.env;
 
+
 const store = createStore();
-const app = express()
+const app = express();
+
+app.use(compression())
+  .use(helmet())
+  .use(cors());
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,

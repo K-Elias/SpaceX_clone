@@ -1,26 +1,25 @@
-import path from 'path';
 import { SourceMapDevToolPlugin } from 'webpack';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import ScriptExtHtmlWebpackPlugin from 'script-ext-html-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
+import Dotenv from 'dotenv-webpack';
 
 const mode = process.env.NODE_ENV;
 
 const entry = path.resolve(__dirname, 'src/index.js');
 
 const output = {
-  path: path.join(__dirname, 'dist'),
+  path: path.join(__dirname, 'dist/'),
   filename: mode === 'production' ?
     '[name]-bundle-[hash].js' : '[name].js',
   chunkFilename: mode === 'production' ?
     '[name].chunkhash.bundle.js' : '[name].js'
 };
-
-
 
 const resolve = {
   extensions: ['.js', '.jsx', '.json'],
@@ -90,7 +89,6 @@ const showComments = mode === 'production' ? {
 } : {};
 
 const optimization = {
-  minimize: true,
   minimizer: [
     new TerserPlugin({
       ...showComments,
@@ -159,7 +157,11 @@ const plugins = [
   }),
   new ScriptExtHtmlWebpackPlugin({
     defaultAttribute: 'defer'
-  })
+  }),
+  new Dotenv({
+    path: path.resolve(__dirname, './.env'),
+    systemvars: true
+  }),
 ];
 
 export default {

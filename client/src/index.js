@@ -1,11 +1,27 @@
-import React from "react";
-import { render } from 'react-dom';
-import Routes from "./router";
-import register from "./registerServiceWorker";
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
+import { ApolloProvider } from '@apollo/react-hooks';
+import { render } from 'react-dom'; 
+import React from 'react';
 
-const app = document.getElementById("app");
+import Pages from './pages';
+import GlobalStyle from './styles';
 
-if (app) render(<Routes />, app);
-else throw new Error("No app element");
+const cache = new InMemoryCache();
+const link = new HttpLink({
+  uri: process.env.CLIENT_URL
+});
 
-register();
+const client = new ApolloClient({
+  cache,
+  link
+});
+
+render(
+  <ApolloProvider client={client}>
+    <GlobalStyle />
+    <Pages />
+  </ApolloProvider>, 
+  document.getElementById('app')
+);
