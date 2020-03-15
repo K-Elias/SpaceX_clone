@@ -1,7 +1,5 @@
 import React from 'react';
 
-const BookTrips = () => (
-  <div/>;
-)
+const BookTrips = () => <div />;
 
 export default BookTrips;

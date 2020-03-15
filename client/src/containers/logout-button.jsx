@@ -1,7 +1,5 @@
 import React from 'react';
 
-const LogoutButton = () => (
-  <div/>;
-);
+const LogoutButton = () => <div />;
 
 export default LogoutButton;

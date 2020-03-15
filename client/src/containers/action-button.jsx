@@ -1,7 +1,5 @@
 import React from 'react';
 
-const ActionButton = () => (
-  <div/>;
-)
+const ActionButton = () => <div />;
 
 export default ActionButton;

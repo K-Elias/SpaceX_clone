@@ -1,32 +1,35 @@
-import React, { Fragment } from "react";
-import styled from "styled-components";
+import React, { Fragment } from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-import { unit, colors } from "../styles";
+import { unit, colors } from '../styles';
 
-export default props => (
-  <Fragment>
-    <Bar />
-    <Container>{props.children}</Container>
-  </Fragment>
+const PageContainer = ({ children }) => (
+	<Fragment>
+		<Bar />
+		<Container>{children}</Container>
+	</Fragment>
 );
 
-/**
- * STYLED COMPONENTS USED IN THIS FILE ARE BELOW HERE
- */
+PageContainer.propTypes = {
+	children: PropTypes.object
+};
 
 const Bar = styled.div`
-  flex-shrink: 0;
-  height: 12;
-  background-color: ${colors.primary};
+	flex-shrink: 0;
+	height: 12px;
+	background-color: ${colors.primary};
 `;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  width: 100%;
-  max-width: 600;
-  margin: 0 auto;
-  padding: ${unit * 3};
-  padding-bottom: ${unit * 5};
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	width: 100%;
+	max-width: 600;
+	margin: 0 auto;
+	padding: ${unit * 3}px;
+	padding-bottom: ${unit * 5}px;
 `;
+
+export default PageContainer;

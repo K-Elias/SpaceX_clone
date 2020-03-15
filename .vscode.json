@@ -1,0 +1,55 @@
+{
+  "liveServer.settings.donotShowInfoMsg": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorTheme": "Noctis Azureus",
+  "window.zoomLevel": 0,
+  "editor.tabSize": 2,
+  "eslint.alwaysShowStatus": true,
+  "editor.formatOnSave": true,
+  "emmet.includeLanguages": {
+    "javascript": "css"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": false
+  },
+  "javascript.validate.enable": false,
+  "breadcrumbs.enabled": true,
+  "editor.fontFamily": "Menlo, 'monospace', monospace, 'Droid Sans Fallback'",
+  "npm.packageManager": "npm",
+  "less.lint.duplicateProperties": "error",
+  "scss.lint.duplicateProperties": "error",
+  "scss.lint.float": "error",
+  "css.lint.emptyRules": "error",
+  "css.lint.unknownAtRules": "error",
+  "editor.rulers": [
+    80
+  ],
+  "editor.fontSize": 17,
+  "editor.detectIndentation": true,
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[json]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "files.exclude": {
+    "**/node_modules": true
+  },
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#FFC600",
+    "titleBar.inactiveBackground": "#FFC600CC"
+  },
+  "explorer.confirmDragAndDrop": false,
+  "html.format.wrapLineLength": 80,
+  "explorer.confirmDelete": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "rewrap.autoWrap.enabled": true,
+  "editor.minimap.maxColumn": 80
+}

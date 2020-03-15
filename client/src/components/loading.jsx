@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-import { ReactComponent as Logo } from '../assets/logo.svg';
+import Logo from '../../assets/icons/logo.svg';
 import { colors } from '../styles';
 
 const spin = keyframes`
@@ -10,13 +10,13 @@ const spin = keyframes`
 `;
 
 const Loading = styled(Logo)`
-  display: block;
-  margin: auto;
-  fill: ${colors.grey};
-  path {
-    transform-origin: 'center',
-    animation: `${spin} 1s linear infinite`,
-  }
+	display: block;
+	margin: auto;
+	fill: ${colors.grey};
+	path {
+		transform-origin: center;
+		animation: ${spin} 1s linear infinite;
+	}
 `;
 
 export default Loading;

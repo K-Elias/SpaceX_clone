@@ -1,15 +1,14 @@
-import { createGlobalStyle } from 'styled-components'
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { createGlobalStyle } from 'styled-components';
 
 export const unit = 8;
 export const colors = {
-  primary: '#220a82',
-  secondary: '#14cbc4',
-  accent: '#e535ab',
-  background: '#f7f8fa',
-  grey: '#d8d9e0',
-  text: '#343c5a',
-  textSecondary: '#747790'
+	primary: '#220a82',
+	secondary: '#14cbc4',
+	accent: '#e535ab',
+	background: '#f7f8fa',
+	grey: '#d8d9e0',
+	text: '#343c5a',
+	textSecondary: '#747790'
 };
 
 const GlobalStyle = createGlobalStyle`
