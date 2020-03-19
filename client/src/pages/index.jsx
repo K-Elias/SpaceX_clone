@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Launch from './launch';
 import Launches from './launches';
@@ -8,17 +8,17 @@ import Profile from './profile';
 import { Footer, PageContainer } from '../components';
 
 const Pages = () => (
-	<Fragment>
+	<Router>
 		<PageContainer>
-			<Router>
-				<Route path="/" component={Launches} />
-				<Route path="launch/:launchId" component={Launch} />
-				<Route path="cart" component={Cart} />
-				<Route path="profile" component={Profile} />
-			</Router>
+			<Switch>
+				<Route exact path="/" component={Launches} />
+				<Route path="/launch/:launchId" component={Launch} />
+				<Route path="/cart" component={Cart} />
+				<Route path="/profile" component={Profile} />
+			</Switch>
 		</PageContainer>
 		<Footer />
-	</Fragment>
+	</Router>
 );
 
 export default Pages;

@@ -10,6 +10,8 @@ const spin = keyframes`
 `;
 
 const Loading = styled(Logo)`
+	width: 64px;
+	height: 64px;
 	display: block;
 	margin: auto;
 	fill: ${colors.grey};

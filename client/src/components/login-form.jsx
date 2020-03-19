@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-
 import PropTypes from 'prop-types';
+
 import { colors, unit } from '../styles';
 import Button from './button';
 import space from '../../assets/images/space.jpg';
@@ -73,12 +73,16 @@ const Header = styled.header`
 `;
 
 const StyledLogo = styled(Logo)`
+	width: 56px;
+	height: 56px;
 	display: block;
 	margin: 0 auto;
 	position: relative;
 `;
 
 const StyledCurve = styled(Curve)`
+	width: 100%;
+	height: 100%;
 	fill: ${colors.primary};
 	position: absolute;
 	top: 0;

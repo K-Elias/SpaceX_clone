@@ -21,10 +21,10 @@ export default styled.button`
   background-color: ${colors.accent};
   cursor: pointer;
   outline: none;
-  &&:hover {
+  &:hover {
     background-color: ${lighten(0.1, colors.accent)};
   };
-  &&:active': {
+  &:active {
     background-color: ${lighten(0.2, colors.accent)};
   },
 `;

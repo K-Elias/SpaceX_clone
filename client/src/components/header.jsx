@@ -26,7 +26,7 @@ const Header = ({ image, children = 'Space Explorer' }) => {
 		<Container>
 			<Image round={!image} src={avatar} alt="Space dog" />
 			<div>
-				<h2>{children}</h2>
+				<h2 style={{ color: 'black' }}>{children}</h2>
 				<Subheading>{email}</Subheading>
 			</div>
 		</Container>
@@ -34,7 +34,7 @@ const Header = ({ image, children = 'Space Explorer' }) => {
 };
 
 Header.propTypes = {
-	image: PropTypes.string.isRequired,
+	image: PropTypes.string,
 	children: PropTypes.string
 };
 

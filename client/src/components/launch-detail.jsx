@@ -3,28 +3,27 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { unit } from '../styles';
-import { cardClassName, getBackgroundImage } from './launch-tile';
+import { CardClassName, getBackgroundImage } from './launch-tile';
 
-const LaunchDetail = ({ id, site, rocket }) => (
+const LaunchDetail = ({ launch }) => (
 	<Card
 		style={{
-			backgroundImage: getBackgroundImage(toString(id))
+			backgroundImage: getBackgroundImage(launch.id)
 		}}
 	>
 		<h3>
-			{rocket && rocket.name} ({rocket && rocket.type})
+			{launch.rocket && launch.rocket.name} (
+			{launch.rocket && launch.rocket.type})
 		</h3>
-		<h5>{site}</h5>
+		<h5>{launch.site}</h5>
 	</Card>
 );
 
 LaunchDetail.propTypes = {
-	id: PropTypes.string,
-	site: PropTypes.string,
-	rocket: PropTypes.object
+	launch: PropTypes.object
 };
 
-const Card = styled(cardClassName)`
+const Card = styled(CardClassName)`
 	height: 365px;
 	margin-bottom: ${unit * 4}px;
 `;

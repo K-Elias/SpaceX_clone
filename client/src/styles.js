@@ -22,7 +22,7 @@ const GlobalStyle = createGlobalStyle`
     background-color: ${colors.background};
     color: ${colors.text};
   }
-  #root {
+  #app {
     display: flex;
     flex-direction: column;
     min-height: 100%;

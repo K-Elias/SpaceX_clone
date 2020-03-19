@@ -10,12 +10,20 @@ import GlobalStyle from './styles';
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
+	headers: { authorization: localStorage.getItem('token') },
 	uri: process.env.CLIENT_URL
 });
 
 const client = new ApolloClient({
 	cache,
 	link
+});
+
+cache.writeData({
+	data: {
+		isLoggedIn: !!localStorage.getItem('token'),
+		cartItems: []
+	}
 });
 
 render(

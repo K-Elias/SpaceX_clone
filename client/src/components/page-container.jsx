@@ -12,7 +12,7 @@ const PageContainer = ({ children }) => (
 );
 
 PageContainer.propTypes = {
-	children: PropTypes.object
+	children: PropTypes.element
 };
 
 const Bar = styled.div`
@@ -26,7 +26,7 @@ const Container = styled.div`
 	flex-direction: column;
 	flex-grow: 1;
 	width: 100%;
-	max-width: 600;
+	max-width: 600px;
 	margin: 0 auto;
 	padding: ${unit * 3}px;
 	padding-bottom: ${unit * 5}px;

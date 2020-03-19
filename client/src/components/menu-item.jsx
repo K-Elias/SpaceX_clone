@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { Link } from '@reach/router';
+import { Link } from 'react-router-dom';
 import { colors, unit } from '../styles';
 
 export const menuItemClassName = css`
@@ -13,7 +13,7 @@ export const menuItemClassName = css`
 	text-align: center;
 	svg {
 		display: block;
-		width: 60;
+		width: 60px;
 		margin: 0 auto ${unit}px;
 		fill: ${colors.secondary};
 	}
@@ -21,7 +21,7 @@ export const menuItemClassName = css`
 
 const MenuItem = styled(Link)`
 	${menuItemClassName};
-	text-decoration: 'none';
+	text-decoration: none;
 `;
 
 export default MenuItem;

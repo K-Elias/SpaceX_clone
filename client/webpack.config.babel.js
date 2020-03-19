@@ -15,9 +15,9 @@ const entry = path.resolve(__dirname, 'src/index.js');
 
 const output = {
 	path: path.join(__dirname, 'dist/'),
-	filename: mode === 'production' ? '[name]-bundle-[hash].js' : '[name].js',
-	chunkFilename:
-		mode === 'production' ? '[name].chunkhash.bundle.js' : '[name].js'
+	publicPath: '/',
+	filename: mode === 'production' ? '[name]-[contentHash].js' : '[name].js'
+	// chunkFilename: '[name].[chunkhash].js'
 };
 
 const resolve = {
@@ -50,41 +50,39 @@ const module = {
 		},
 		{
 			test: /\.svg$/,
-			use: ['@svgr/webpack']
+			use: '@svgr/webpack'
 		},
 		{
 			test: /\.(png|jpe?g|gif|ico)$/,
-			use: ['url-loader?limit=8192', 'file-loader']
+			use: 'file-loader'
 		},
 		{
 			test: /\.(woff|woff2|eot|ttf|otf)$/,
-			use: ['url-loader?limit=8192', 'file-loader']
+			use: 'file-loader'
 		}
 	]
 };
 
-const node = {
-	fs: 'empty'
-};
-
 const devtool = mode === 'development' ? 'eval-source-map' : false;
 
-const comments = {
-	extractComments: false,
-	terserOptions: {
-		output: {
-			comments: false
-		}
-	}
+const devServerOptions = {
+	inline: false,
+	contentBase: './dist',
+	historyApiFallback: true
 };
 
-const showComments = mode === 'production' ? comments : {};
+const devServer = mode === 'development' ? devServerOptions : {};
 
-const optimization = {
+const minification = {
 	minimizer: [
 		new TerserPlugin({
-			...showComments,
-			sourceMap: mode === 'development',
+			extractComments: false,
+			terserOptions: {
+				output: {
+					comments: false
+				}
+			},
+			cache: true,
 			parallel: true
 		}),
 		new OptimizeCSSAssetsPlugin({})
@@ -92,30 +90,26 @@ const optimization = {
 	moduleIds: 'hashed',
 	runtimeChunk: 'single',
 	splitChunks: {
-		chunks: 'all',
 		cacheGroups: {
-			vendor: {
-				test: /node_modules/,
-				name: 'vendor',
-				chunks: 'all',
-				priority: 20
+			react: {
+				test: /[\\/]node_modules[\\/]((react)*)[\\/]/,
+				name: 'react',
+				chunks: 'all'
 			},
 			commons: {
+				test: /[\\/]node_modules[\\/]/,
 				name: 'commons',
-				minChunks: 2,
-				chunks: 'async',
-				priority: 10,
-				reuseExistingChunk: true,
-				enforce: true
+				chunks: 'all'
 			}
 		}
 	}
 };
 
+const optimization = mode === 'production' ? minification : {};
+
 const dev_plugins = [
 	new SourceMapDevToolPlugin({
-		filename: '[name].js.map',
-		exclude: ['vendor.js']
+		filename: '[name].js.map'
 	})
 ];
 
@@ -129,12 +123,12 @@ const plugins_sup = mode === 'production' ? prod_plugins : dev_plugins;
 const plugins = [
 	...plugins_sup,
 	new MiniCssExtractPlugin({
-		filename: mode === 'production' ? '[name]-[contenthash].css' : '[name].css',
-		chunkFilename: '[id].css'
+		filename: mode === 'production' ? '[name]-[contenthash].css' : '[name].css'
 	}),
 	new HtmlWebpackPlugin({
 		hash: true,
 		template: './public/index.html',
+		filename: 'index.html',
 		minify: {
 			collapseWhitespace: true,
 			removeComments: true,
@@ -146,7 +140,8 @@ const plugins = [
 			minifyJS: true,
 			minifyCSS: true,
 			minifyURLs: true
-		}
+		},
+		scriptLoading: 'defer'
 	}),
 	new ScriptExtHtmlWebpackPlugin({
 		defaultAttribute: 'defer'
@@ -163,7 +158,7 @@ export default {
 	output,
 	resolve,
 	devtool,
-	node,
+	devServer,
 	module,
 	optimization,
 	plugins
