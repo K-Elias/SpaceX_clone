@@ -8,6 +8,7 @@ switch (process.env.NODE_ENV) {
     break;
 
   case 'development':
+  default:
     config = require('./config/webpack.dev');
     break;
 }
