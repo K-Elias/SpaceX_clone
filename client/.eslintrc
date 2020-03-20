@@ -19,7 +19,7 @@
       "jsx": true
     },
     "babelOptions": {
-      "configFile": "./.babelrc"
+      "configFile": "../.babelrc"
     }
   },
   "ignorePatterns": [

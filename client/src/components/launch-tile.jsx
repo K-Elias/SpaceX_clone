@@ -3,9 +3,9 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import galaxy from '../../assets/images/galaxy.jpg';
-import iss from '../../assets/images/iss.jpg';
-import moon from '../../assets/images/moon.jpg';
+import galaxy from '../../public/assets/images/galaxy.jpg';
+import iss from '../../public/assets/images/iss.jpg';
+import moon from '../../public/assets/images/moon.jpg';
 import { unit } from '../styles';
 
 const backgrounds = [galaxy, iss, moon];

@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { unit, colors } from '../styles';
-import dog1 from '../../assets/images/dog-1.png';
-import dog2 from '../../assets/images/dog-2.png';
-import dog3 from '../../assets/images/dog-3.png';
+import dog1 from '../../public/assets/images/dog-1.png';
+import dog2 from '../../public/assets/images/dog-2.png';
+import dog3 from '../../public/assets/images/dog-3.png';
 
 const max = 25; // 25 letters in the alphabet
 const offset = 97; // letter A's charcode is 97

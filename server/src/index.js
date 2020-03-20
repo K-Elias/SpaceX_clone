@@ -15,7 +15,7 @@ import typeDefs from './schema';
 import resolvers from './resolvers';
 import UserAPI from './datasources/user';
 import LaunchAPI from './datasources/launches';
-import webpackConfig from '../../client/webpack.config.babel';
+import webpackConfig from '../../webpack.config.babel';
 
 config();
 const { PORT, NODE_ENV } = process.env;
@@ -31,17 +31,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(compression())
-  .use(helmet())
+app.use(express.urlencoded({ extended: true }))
+  .use(express.json())
+  .use(compression())
+  .use(helmet());
+
+app.use(express.static(path.resolve(__dirname, '../../dist')));
 
 if (NODE_ENV === 'development') {
-  const compiler = webpack(webpackConfig);
+  const compiler = webpack(webpackConfig.default);
 
   app.use(historyApiFallback({}));
 
   app.use(webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    contentBase: path.resolve(__dirname, '../../client/dist'),
+    publicPath: webpackConfig.default.output.publicPath,
+    contentBase: path.resolve(__dirname, '../../dist'),
     stats: {
       colors: true,
       hash: false,
@@ -53,13 +57,11 @@ if (NODE_ENV === 'development') {
   }));
 
   app.use(webpackHotMiddleware(compiler));
-  app.use(express.static(path.resolve(__dirname, '../dist')));
 
-} else {
-  app.use(express.static(path.resolve(__dirname, '../../client/dist')));
+} else if (NODE_ENV === 'production') {
   
   app.get(['/', '/launch/*'], (req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/dist/index.html'), (err) => {
+    res.sendFile(path.join(__dirname, '../../dist/index.html'), (err) => {
       if (err) {
         console.log(err);
       }
@@ -67,6 +69,11 @@ if (NODE_ENV === 'development') {
   });
 }
 
+app.use((err, req, res, next) => {
+  console.error('Error:', err.message);
+  res.status(422).json(err.message);
+  next();
+});
 
 const server = new ApolloServer({
   typeDefs,

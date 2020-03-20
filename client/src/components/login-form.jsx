@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 import { colors, unit } from '../styles';
 import Button from './button';
-import space from '../../assets/images/space.jpg';
-import Logo from '../../assets/icons/logo.svg';
-import Curve from '../../assets/icons/curve.svg';
-import Rocket from '../../assets/icons/rocket.svg';
+import space from '../../public/assets/images/space.jpg';
+import Logo from '../../public/assets/icons/logo.svg';
+import Curve from '../../public/assets/icons/curve.svg';
+import Rocket from '../../public/assets/icons/rocket.svg';
 
 const LoginForm = ({ login }) => {
 	const [email, setEmail] = useState('');

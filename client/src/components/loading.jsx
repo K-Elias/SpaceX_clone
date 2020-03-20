@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-import Logo from '../../assets/icons/logo.svg';
+import Logo from '../../public/assets/icons/logo.svg';
 import { colors } from '../styles';
 
 const spin = keyframes`

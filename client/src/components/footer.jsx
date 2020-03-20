@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 import MenuItem from './menu-item';
 import LogoutButton from '../containers/logout-button';
-import HomeIcon from '../../assets/icons/home.svg';
-import CartIcon from '../../assets/icons/cart.svg';
-import ProfileIcon from '../../assets/icons/profile.svg';
+import HomeIcon from '../../public/assets/icons/home.svg';
+import CartIcon from '../../public/assets/icons/cart.svg';
+import ProfileIcon from '../../public/assets/icons/profile.svg';
 import { colors, unit } from '../styles';
 
 export default () => (
