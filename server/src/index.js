@@ -23,26 +23,15 @@ const { PORT, NODE_ENV } = process.env;
 const store = createStore();
 const app = express();
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
-
 app.use(express.urlencoded({ extended: true }))
   .use(express.json())
   .use(compression())
   .use(helmet());
 
-app.use(express.static(path.resolve(__dirname, '../../dist')));
-
 if (NODE_ENV === 'development') {
+  
   const compiler = webpack(webpackConfig.default);
-
   app.use(historyApiFallback({}));
-
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.default.output.publicPath,
     contentBase: path.resolve(__dirname, '../../dist'),
@@ -55,11 +44,12 @@ if (NODE_ENV === 'development') {
       modules: false
     }
   }));
-
   app.use(webpackHotMiddleware(compiler));
+  app.use(express.static(path.resolve(__dirname, '../../dist')));
 
 } else if (NODE_ENV === 'production') {
-  
+
+  app.use(express.static(path.resolve(__dirname, '../../dist')));
   app.get(['/', '/launch/*'], (req, res) => {
     res.sendFile(path.join(__dirname, '../../dist/index.html'), (err) => {
       if (err) {
