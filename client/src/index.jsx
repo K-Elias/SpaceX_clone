@@ -4,6 +4,7 @@ import { HttpLink } from 'apollo-link-http';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { render } from 'react-dom';
 import React from 'react';
+import register from './registerServiceWorker';
 
 import Pages from './pages/index';
 import GlobalStyle from './styles';
@@ -26,10 +27,16 @@ cache.writeData({
 	}
 });
 
-render(
-	<ApolloProvider client={client}>
-		<GlobalStyle />
-		<Pages />
-	</ApolloProvider>,
-	document.getElementById('app')
-);
+const app = document.getElementById('app');
+
+if (app) {
+	render(
+		<ApolloProvider client={client}>
+			<GlobalStyle />
+			<Pages />
+		</ApolloProvider>,
+		app
+	);
+} else throw new Error('Error: check index.html file');
+
+register();

@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: true }))
 if (NODE_ENV === 'development') {
   
   const compiler = webpack(webpackConfig.default);
-  app.use(historyApiFallback({}));
+  app.use(historyApiFallback());
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.default.output.publicPath,
     contentBase: path.resolve(__dirname, '../../dist'),

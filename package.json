@@ -6,8 +6,8 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "client": "webpack --progress --profile --colors --config ./webpack.config.babel.js",
-    "server": "nodemon -r esm ./server/src/index.js",
+    "build:prod": "NODE_ENV=production webpack --progress --profile --colors --config ./webpack.config.babel.js && node -r esm ./server/src/index.js",
+    "build:dev": "NODE_ENV=development nodemon -r esm ./server/src/index.js",
     "lint:client": "eslint ./client",
     "lint:server": "eslint ./server",
     "lint:client:fix": "eslint ./client --fix",
@@ -100,7 +100,7 @@
     "react-dom": "^16.13.0",
     "react-router-dom": "^5.1.2",
     "sequelize": "^5.21.5",
-    "styled-components": "^5.0.1",
-    "sqlite3": "^4.1.1"
+    "sqlite3": "^4.1.1",
+    "styled-components": "^5.0.1"
   }
 }

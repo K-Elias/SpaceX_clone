@@ -1,7 +1,6 @@
 import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import React from 'react';
 import gql from 'graphql-tag';
-import ApolloClient from 'apollo-client';
 
 import { LoginForm, Loading } from '../components';
 
@@ -14,6 +13,7 @@ export const LOGIN_USER = gql`
 const Login = () => {
 	const client = useApolloClient();
 	const [login, { loading, error }] = useMutation(LOGIN_USER, {
+		// eslint-disable-next-line no-shadow
 		onCompleted({ login }) {
 			localStorage.setItem('token', login);
 			client.writeData({ data: { isLoggedIn: true } });
