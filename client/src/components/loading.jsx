@@ -1,3 +1,4 @@
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import Logo from '../../public/assets/icons/logo.svg';
@@ -9,7 +10,7 @@ const spin = keyframes`
   }
 `;
 
-const Loading = styled(Logo)`
+const LoadingLogo = styled(Logo)`
 	width: 64px;
 	height: 64px;
 	display: block;
@@ -20,5 +21,11 @@ const Loading = styled(Logo)`
 		animation: ${spin} 1s linear infinite;
 	}
 `;
+
+const Loading = () => (
+	<div style={{ height: '100%' }}>
+		<LoadingLogo />
+	</div>
+);
 
 export default Loading;

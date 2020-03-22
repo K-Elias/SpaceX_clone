@@ -24,7 +24,7 @@ const Profile = () => {
 	});
 	if (loading) return <Loading />;
 	if (error) return <p>ERROR: {error.message}</p>;
-	if (!data) return <p>ERROR</p>;
+	if (!data || (!!data && !data.me)) return <p>ERROR</p>;
 
 	const $data = data.me.trips.map(launch => (
 		<LaunchTile key={launch.id} launch={launch} />

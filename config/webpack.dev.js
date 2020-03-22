@@ -12,7 +12,8 @@ export default merge(commonConfig, {
 	devtool: 'eval-source-map',
 	devServer: {
 		contentBase: './client/public',
-		historyApiFallback: true
+		historyApiFallback: true,
+		hot: true
 	},
 	plugins: [
 		new SourceMapDevToolPlugin({

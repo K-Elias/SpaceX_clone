@@ -7,8 +7,9 @@ import helmet from 'helmet';
 import compression from 'compression';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
-import historyApiFallback from 'connect-history-api-fallback';
+import historyApiFallback from 'connect-history-api-fallback-exclusions';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+
 
 import { createStore } from './utils';
 import typeDefs from './schema';
@@ -31,7 +32,9 @@ app.use(express.urlencoded({ extended: true }))
 if (NODE_ENV === 'development') {
   
   const compiler = webpack(webpackConfig.default);
-  app.use(historyApiFallback());
+  app.use(historyApiFallback({
+    exclusions: ['/graphql']
+  }));
   app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackConfig.default.output.publicPath,
     contentBase: path.resolve(__dirname, '../../dist'),

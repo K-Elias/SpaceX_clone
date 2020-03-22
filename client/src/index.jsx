@@ -1,18 +1,23 @@
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { render } from 'react-dom';
 import React from 'react';
-import register from './registerServiceWorker';
+import gql from 'graphql-tag';
 
+import { resolvers, typeDefs } from './resolvers';
+import register from './registerServiceWorker';
 import Pages from './pages/index';
+import Login from './pages/login';
 import GlobalStyle from './styles';
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
 	headers: { authorization: localStorage.getItem('token') },
-	uri: process.env.CLIENT_URL
+	uri: process.env.CLIENT_URL,
+	typeDefs,
+	resolvers
 });
 
 const client = new ApolloClient({
@@ -20,12 +25,17 @@ const client = new ApolloClient({
 	link
 });
 
-cache.writeData({
-	data: {
-		isLoggedIn: !!localStorage.getItem('token'),
-		cartItems: []
+const IS_LOGGED_IN = gql`
+	query IsUserLoggedIn {
+		isLoggedIn @client
 	}
-});
+`;
+
+const IsLoggedIn = () => {
+	const { data } = useQuery(IS_LOGGED_IN);
+	if (!data) return <Login />;
+	return data.isLoggedIn ? <Pages /> : <Login />;
+};
 
 const app = document.getElementById('app');
 
@@ -33,7 +43,7 @@ if (app) {
 	render(
 		<ApolloProvider client={client}>
 			<GlobalStyle />
-			<Pages />
+			<IsLoggedIn />
 		</ApolloProvider>,
 		app
 	);
