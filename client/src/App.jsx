@@ -6,11 +6,11 @@ import { render } from 'react-dom';
 import React from 'react';
 import gql from 'graphql-tag';
 
-import { resolvers, typeDefs } from './resolvers';
-import register from './registerServiceWorker';
+import { resolvers, typeDefs } from './lib/resolvers';
+import register from './lib/registerServiceWorker';
 import Pages from './pages/index';
 import Login from './pages/login';
-import GlobalStyle from './styles';
+import GlobalStyle from './lib/styles';
 
 const cache = new InMemoryCache();
 const link = new HttpLink({

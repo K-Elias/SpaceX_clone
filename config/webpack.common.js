@@ -3,7 +3,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 export default {
-	entry: './client/src/index.jsx',
+	entry: './client/src/App.jsx',
 	output: {
 		path: path.join(__dirname, '../dist/'),
 		publicPath: '/'

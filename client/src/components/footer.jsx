@@ -6,7 +6,7 @@ import LogoutButton from '../containers/logout-button';
 import HomeIcon from '../../public/assets/icons/home.svg';
 import CartIcon from '../../public/assets/icons/cart.svg';
 import ProfileIcon from '../../public/assets/icons/profile.svg';
-import { colors, unit } from '../styles';
+import { colors, unit } from '../lib/styles';
 
 export default () => (
 	<Container>

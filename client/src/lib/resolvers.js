@@ -1,6 +1,6 @@
 /* eslint-disable multiline-ternary */
 import gql from 'graphql-tag';
-import { GET_CART_ITEMS } from './pages/cart';
+import { GET_CART_ITEMS } from '../pages/cart';
 
 export const typeDefs = gql`
 	extend type Query {

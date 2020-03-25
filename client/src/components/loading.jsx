@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import Logo from '../../public/assets/icons/logo.svg';
-import { colors } from '../styles';
+import { colors } from '../lib/styles';
 
 const spin = keyframes`
   to {

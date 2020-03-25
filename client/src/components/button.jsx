@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { lighten } from 'polished';
-import { unit, colors } from '../styles';
+import { unit, colors } from '../lib/styles';
 
 const height = 50;
 

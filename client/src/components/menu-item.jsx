@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { colors, unit } from '../styles';
+import { colors, unit } from '../lib/styles';
 
 export const menuItemClassName = css`
 	flex-grow: 1;

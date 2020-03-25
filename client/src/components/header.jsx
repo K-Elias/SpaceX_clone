@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import { unit, colors } from '../styles';
+import { unit, colors } from '../lib/styles';
 import dog1 from '../../public/assets/images/dog-1.png';
 import dog2 from '../../public/assets/images/dog-2.png';
 import dog3 from '../../public/assets/images/dog-3.png';
