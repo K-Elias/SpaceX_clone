@@ -1,6 +1,8 @@
+import isEmail from 'isemail';
 import { paginateResults } from './utils';
 
 export default {
+
   Query: {
 
     launches: async (_, { pageSize = 20, after }, { dataSources }) => {
@@ -25,16 +27,13 @@ export default {
     },
     launch: (_, { id }, { dataSources }) =>
       dataSources.launchAPI.getLaunchById({ launchId: id }),
-    me: (_, __, { dataSources }) => dataSources.userAPI.findOrCreateUser()
-
+    me: (_, __, { dataSources: { userAPI } }) => {
+      const user = userAPI.getUser();
+      return user;
+    }
   },
 
   Mutation: {
-    
-    login: async (_, { email }, { dataSources }) => {
-      const user = await dataSources.userAPI.findOrCreateUser({ email });
-      if (user) return Buffer.from(email).toString('base64');
-    },
 
     bookTrips: async (_, { launchIds }, { dataSources }) => {
       const results = await dataSources.userAPI.bookTrips({ launchIds });
@@ -69,7 +68,18 @@ export default {
         message: 'trip cancelled',
         launches: [launch],
       };
-    }
+    },
+
+    register: async (_, { image, email, password }, { dataSources }) => {
+      if (!image || !isEmail.validate(email) || (!password || password.length < 5)) {
+        throw new Error('Input not valid: please check input field');
+      }
+      const User = await dataSources.userAPI.createUser({ image, email, password });
+      if (!User) throw new Error('User not valid');
+      return User;
+    },
+
+    login: (_, { email, password }) => {}
 
   },
 

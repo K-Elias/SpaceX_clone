@@ -1,101 +1,112 @@
-import { ApolloServer } from 'apollo-server-express';
-import { config } from 'dotenv';
+import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import path from 'path';
-import isEmail from 'isemail';
 import helmet from 'helmet';
 import compression from 'compression';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import historyApiFallback from 'connect-history-api-fallback-exclusions';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import mongoose from 'mongoose';
+import { verify } from 'jsonwebtoken';
+import 'dotenv/config';
 
-
-import { createStore } from './utils';
+import store from './model';
 import typeDefs from './schema';
 import resolvers from './resolvers';
 import UserAPI from './datasources/user';
 import LaunchAPI from './datasources/launches';
 import webpackConfig from '../../webpack.config.babel';
 
-config();
-const { PORT, NODE_ENV } = process.env;
-
-const store = createStore();
-const app = express();
-
-app.use(express.urlencoded({ extended: true }))
-  .use(express.json())
-  .use(compression())
-  .use(helmet());
-
-if (NODE_ENV === 'development') {
+(() => {
   
-  const compiler = webpack(webpackConfig.default);
-  app.use(historyApiFallback({
-    exclusions: ['/graphql']
-  }));
-  app.use(webpackDevMiddleware(compiler, {
-    publicPath: webpackConfig.default.output.publicPath,
-    contentBase: path.resolve(__dirname, '../../dist'),
-    stats: {
-      colors: true,
-      hash: false,
-      timings: true,
-      chunks: false,
-      chunkModules: false,
-      modules: false
-    }
-  }));
-  app.use(webpackHotMiddleware(compiler));
-  app.use(express.static(path.resolve(__dirname, '../../dist')));
+  const {
+    PORT,
+    NODE_ENV,
+    ACCESS_KEY,
+    MONGO_DB
+  } = process.env;
+  
+  const app = express();
+  const routes = ['/launches', '/launch/*', '/cart', '/profile', '/graphql'];
 
-} else if (NODE_ENV === 'production') {
+  app.use(compression())
+    .use(helmet())
+    .use(express.urlencoded({ extended: true }))
+    .use(express.json())
+    .use(express.static(path.resolve(__dirname, '../../dist')));
+  
+  if (NODE_ENV === 'production') {
 
-  app.use(express.static(path.resolve(__dirname, '../../dist')));
-  app.get(['/', '/launch/*'], (req, res) => {
-    res.sendFile(path.join(__dirname, '../../dist/index.html'), (err) => {
-      if (err) {
-        console.log(err);
-      }
+    app.get(routes, (req, res) => {
+      res.sendFile(path.join(__dirname, '../../dist/index.html'), err => {
+        if (err) console.error(err);
+      });
     });
+
+  } else if (NODE_ENV === 'development') {
+
+    const compiler = webpack(webpackConfig.default);
+    app.use(historyApiFallback({
+      exclusions: ['/graphql']
+    }));
+    app.use(webpackDevMiddleware(compiler, {
+      publicPath: webpackConfig.default.output.publicPath,
+      contentBase: path.resolve(__dirname, '../../dist'),
+      stats: {
+        colors: true,
+        hash: false,
+        timings: true,
+        chunks: false,
+        chunkModules: false,
+        modules: false
+      }
+    }));
+    app.use(webpackHotMiddleware(compiler));
+
+  }
+
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    dataSources: () => ({
+      launchAPI: new LaunchAPI(),
+      userAPI: new UserAPI({ store })
+    }),
+    context: async ({ req }) => {
+      const { header, path } = req;
+      if (!path.includes(routes)) return null;
+      const authorization = header['authorization'];
+      if (!authorization) return null;
+      const token = authorization.split(' ')[1];
+      const payload = await verify(token, ACCESS_KEY);
+      if (!payload) return null;
+      const user = await store.User.findOne(payload);
+      if (!user) return null;
+      return { user };
+    }
   });
-}
+  
+  server.applyMiddleware({ app });
 
-app.use((err, req, res, next) => {
-  console.error('Error:', err.message);
-  res.status(422).json(err.message);
-  next();
-});
+  mongoose.set('useCreateIndex', true);
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  introspection: true,
-  dataSources: () => ({
-    launchAPI: new LaunchAPI(),
-    userAPI: new UserAPI({ store })
-  }),
-  context: async ({ req }) => {
-    const auth = req.headers && req.headers.authorization || '';
-    const email = Buffer.from(auth, 'base64').toString('ascii');
-    if (!isEmail.validate(email)) return { user: null };
-    const users = await store.users.findOrCreate({ where: { email } });
-    const user = users && users[0] || null;
+  mongoose.connect(MONGO_DB, { useUnifiedTopology: true })
+    .then(() =>
+      app.listen({ port: PORT }, err => {
+        if (err) throw new Error(err);
+        console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+      })
+    )
+    .catch(err => {
+      console.error(err);
+      process.exit();
+    });
+  
+  
+  process.on('SIGTERM', () =>
+    server.close(() =>
+      console.log('Process terminated')
+  ));
 
-    return { user: { ...user.dataValues } };
-  },
-});
-
-server.applyMiddleware({ app });
-
-app.listen({ port: PORT }, err => {
-  if (err) throw new Error(err);
-  console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
-});
-
-process.on('SIGTERM', () => {
-  server.close(() => {
-    console.log('Process terminated')
-  })
-})
+})();

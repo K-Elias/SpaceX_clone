@@ -9,6 +9,7 @@ export default styled.button`
   min-width: 200px;
   height: ${height}px;
   margin: 0 auto;
+  margin-bottom: 17px;
   padding: 0 ${unit * 4}px;
   border: none;
   border-radius: ${height / 2}px;

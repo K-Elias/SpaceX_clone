@@ -29,6 +29,7 @@
   "rules": {
     "radix": 0,
     "react/jsx-fragments": 0,
+    "react/jsx-props-no-spreading": 0,
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/require-default-props": 0,

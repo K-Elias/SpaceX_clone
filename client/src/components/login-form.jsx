@@ -60,18 +60,12 @@ LoginForm.propTypes = {
 
 const CreateAccButton = styled.button`
 	display: block;
-	min-width: 200px;
-	margin-top: 13px;
-	height: 10px;
 	margin: 0 auto;
-	padding: 0 ${unit * 4}px;
 	border: none;
-	border-radius: 4px;
 	font-family: inherit;
 	font-size: 18px;
-	line-height: 4px;
 	font-weight: 500;
-	color: blue;
+	color: ${colors.accent};
 	text-transform: uppercase;
 	background-color: white;
 	cursor: pointer;
@@ -79,12 +73,12 @@ const CreateAccButton = styled.button`
 `;
 
 const Container = styled.div`
+	height: 100%;
 	display: flex;
 	flex-direction: column;
-	height: 100%;
 	align-items: center;
 	flex-grow: 1;
-	/* padding-bottom: ${unit * 6}; */
+	padding-bottom: ${unit * 6};
 	color: white;
 	background-color: ${colors.primary};
 	background-image: url(${space});
@@ -92,8 +86,6 @@ const Container = styled.div`
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
-	background-position: center;
-	
 `;
 
 const svgClassName = css`
@@ -106,6 +98,8 @@ const Header = styled.header`
 	width: 100%;
 	padding: ${unit * 2.5}px;
 	position: relative;
+	margin-top: 0;
+	margin-bottom: 20px;
 `;
 
 const StyledLogo = styled(Logo)`
@@ -126,7 +120,7 @@ const StyledCurve = styled(Curve)`
 `;
 
 const Heading = styled.h1`
-	margin: ${unit * 2}px 0 ${unit}px;
+	margin: ${unit * 2}px 0 ${unit * 3}px;
 `;
 
 const StyledRocket = styled(Rocket)`
@@ -136,7 +130,9 @@ const StyledRocket = styled(Rocket)`
 
 const StyledForm = styled.form`
 	width: 100%;
+	height: 250px;
 	max-width: 406px;
+	margin-bottom: 8px;
 	padding: ${unit * 3.5}px;
 	border-radius: 3px;
 	box-shadow: 6px 6px 1px rgba(0, 0, 0, 0.25);

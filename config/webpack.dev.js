@@ -1,4 +1,4 @@
-import { SourceMapDevToolPlugin } from 'webpack';
+import { SourceMapDevToolPlugin, HotModuleReplacementPlugin } from 'webpack';
 import commonConfig from './webpack.common';
 import merge from 'webpack-merge';
 
@@ -11,6 +11,7 @@ export default merge(commonConfig, {
 	},
 	devtool: 'eval-source-map',
 	plugins: [
+		new HotModuleReplacementPlugin({}),
 		new SourceMapDevToolPlugin({
 			filename: '[name].js.map'
 		})

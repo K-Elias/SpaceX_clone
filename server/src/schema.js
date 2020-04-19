@@ -36,13 +36,6 @@ export default gql`
     isBooked: Boolean!
   }
 
-
-  type User {
-    id: ID!
-    email: String!
-    trips: [Launch]!
-  }
-
   type TripUpdateResponse {
     success: Boolean!
     message: String
@@ -55,6 +48,15 @@ export default gql`
     launches: [Launch]!
   }
 
+  type User {
+    id: ID,
+    createdAt: String
+    image: String
+    email: String!
+    password: String,
+    trips: [Launch]
+  }
+
   type Query {
     launches(pageSize: Int, after: String): LaunchConnection
     launch(id: ID!): Launch
@@ -64,7 +66,7 @@ export default gql`
   type Mutation {
     bookTrips(launchIds: [ID]!): TripUpdateResponse!
     cancelTrip(launchId: ID!): TripUpdateResponse!
-    login(email: String): String # login token
+    login(email: String, password: String): User,
+    register(image: String, email: String, password: String): User
   }
-
 `

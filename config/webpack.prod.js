@@ -24,7 +24,7 @@ export default merge(commonConfig, {
 				cache: true,
 				parallel: true
 			}),
-			new OptimizeCSSAssetsPlugin({})
+			new OptimizeCSSAssetsPlugin()
 		],
 		splitChunks: {
 			cacheGroups: {
@@ -42,7 +42,7 @@ export default merge(commonConfig, {
 		}
 	},
 	plugins: [
-		new CleanWebpackPlugin({}),
+		new CleanWebpackPlugin(),
 		new CompressionPlugin({ cache: true })
 	]
 });

@@ -5,7 +5,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 export default {
 	entry: './client/src/App.jsx',
 	output: {
-		path: path.join(__dirname, '../dist/'),
+		path: path.join(__dirname, '../dist'),
 		publicPath: '/'
 	},
 	target: 'web',

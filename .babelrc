@@ -11,33 +11,12 @@
     "@babel/preset-react"
   ],
   "plugins": [
-    [
-      "@babel/plugin-proposal-class-properties",
-      {},
-      "class"
-    ],
-    [
-      "@babel/plugin-proposal-object-rest-spread",
-      {},
-      "spread"
-    ],
-    [
-      "@babel/plugin-transform-runtime",
-      {},
-      "runtime"
-    ],
-    [
-      "@babel/plugin-syntax-dynamic-import",
-      {},
-      "import-syntax"
-    ],
-    [
-      "@babel/plugin-transform-modules-commonjs",
-      {},
-      "commonjs"
-    ],
-    [
-      "babel-plugin-styled-components",
+    ["@babel/plugin-proposal-class-properties", {}, "class"],
+    ["@babel/plugin-proposal-object-rest-spread", {}, "spread"],
+    ["@babel/plugin-transform-runtime", {}, "runtime"],
+    ["@babel/plugin-syntax-dynamic-import", {}, "import-syntax"],
+    ["@babel/plugin-transform-modules-commonjs", {}, "commonjs"],
+    ["babel-plugin-styled-components",
       {
         "pure": true
       },

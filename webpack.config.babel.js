@@ -1,6 +1,6 @@
 import '@babel/register';
 
-let config = '';
+let config;
 
 switch (process.env.NODE_ENV) {
   case 'production':
