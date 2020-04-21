@@ -1,4 +1,5 @@
 import { ApolloServer } from 'apollo-server-express';
+import { verify } from 'jsonwebtoken';
 import express from 'express';
 import path from 'path';
 import helmet from 'helmet';
@@ -8,7 +9,8 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import historyApiFallback from 'connect-history-api-fallback-exclusions';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import mongoose from 'mongoose';
-import { verify } from 'jsonwebtoken';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 
 import store from './model';
@@ -28,9 +30,11 @@ import webpackConfig from '../../webpack.config.babel';
   } = process.env;
   
   const app = express();
-  const routes = ['/launches', '/launch/*', '/cart', '/profile', '/graphql'];
+  const routes = ['/', '/launches', '/launch/*', '/cart', '/profile', '/graphql'];
 
-  app.use(compression())
+  app.use(cors({ path: '/refresh_token', credentials: true }))
+    .use(cookieParser())
+    .use(compression())
     .use(helmet())
     .use(express.urlencoded({ extended: true }))
     .use(express.json())
@@ -73,17 +77,17 @@ import webpackConfig from '../../webpack.config.babel';
       launchAPI: new LaunchAPI(),
       userAPI: new UserAPI({ store })
     }),
-    context: async ({ req }) => {
-      const { header, path } = req;
-      if (!path.includes(routes)) return null;
-      const authorization = header['authorization'];
-      if (!authorization) return null;
-      const token = authorization.split(' ')[1];
-      const payload = await verify(token, ACCESS_KEY);
-      if (!payload) return null;
-      const user = await store.User.findOne(payload);
-      if (!user) return null;
-      return { user };
+    context: async ({ req, res }) => {
+      const { headers, path } = req;
+      let user = null;
+      const headerRegex = /(Bearer)\s.+/gm;
+      if (path.includes(routes) && headerRegex.test(headers['authorization'])) {
+        const authorization = headers['authorization'];
+        const token = authorization.split(' ')[1];
+        const payload = await verify(token, ACCESS_KEY);
+        user = payload ? await store.User.findOne(payload) : null;
+      }
+      return { user, res };
     }
   });
   
@@ -105,8 +109,7 @@ import webpackConfig from '../../webpack.config.babel';
   
   
   process.on('SIGTERM', () =>
-    server.close(() =>
-      console.log('Process terminated')
-  ));
+    server.close(() => console.log('Process terminated'))
+  );
 
 })();

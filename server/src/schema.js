@@ -53,8 +53,13 @@ export default gql`
     createdAt: String
     image: String
     email: String!
-    password: String,
+    password: String
     trips: [Launch]
+  }
+
+  type UserInput {
+    user: User
+    accessToken: String
   }
 
   type Query {
@@ -66,7 +71,7 @@ export default gql`
   type Mutation {
     bookTrips(launchIds: [ID]!): TripUpdateResponse!
     cancelTrip(launchId: ID!): TripUpdateResponse!
-    login(email: String, password: String): User,
+    login(email: String, password: String): UserInput
     register(image: String, email: String, password: String): User
   }
 `

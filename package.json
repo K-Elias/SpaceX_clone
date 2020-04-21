@@ -88,6 +88,7 @@
     "bcrypt": "^4.0.1",
     "compression": "^1.7.4",
     "connect-history-api-fallback-exclusions": "^1.5.1",
+    "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "graphql": "^14.6.0",

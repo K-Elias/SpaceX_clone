@@ -1,15 +1,20 @@
 import mongoose, { model, Schema } from 'mongoose';
 
+import { now } from './utils';
+
 const id = {
   type: String,
   unique: true,
   index: true,
   default: mongoose.Types.ObjectId
-}
+};
 
-const createdAt = { type: Date, default: new Date().toISOString() }
+const createdAt = {
+  type: Date,
+  default: () => now()
+};
 
-const unusedField = { versionKey: false }
+const unusedField = { versionKey: false };
 
 const User = model('User', new Schema({
   id,

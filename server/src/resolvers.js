@@ -38,7 +38,7 @@ export default {
     bookTrips: async (_, { launchIds }, { dataSources }) => {
       const results = await dataSources.userAPI.bookTrips({ launchIds });
       const launches = await dataSources.launchAPI.getLaunchesByIds({
-        launchIds,
+        launchIds
       });
   
       return {
@@ -49,7 +49,7 @@ export default {
             : `the following launches couldn't be booked: ${launchIds.filter(
                 id => !results.includes(id),
               )}`,
-        launches,
+        launches
       };
     },
 
@@ -79,7 +79,12 @@ export default {
       return User;
     },
 
-    login: (_, { email, password }) => {}
+    login: async (_, { email, password }, { dataSources }) => {
+      if (!isEmail.validate(email) && (!password || password.length < 5))
+        throw new Error('Input not valid: please check input field');
+      const User = await dataSources.userAPI.logUser({ email, password });
+      return User;
+    }
 
   },
 

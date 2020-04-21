@@ -11,7 +11,7 @@ export default merge(commonConfig, {
 	},
 	devtool: 'eval-source-map',
 	plugins: [
-		new HotModuleReplacementPlugin({}),
+		new HotModuleReplacementPlugin(),
 		new SourceMapDevToolPlugin({
 			filename: '[name].js.map'
 		})
