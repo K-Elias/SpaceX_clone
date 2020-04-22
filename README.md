@@ -2,6 +2,9 @@
 
 TODO:
 
-_ Register page;
-_ Connect back and front for authentication/authorization;
-_ Flight reservation process;
+=> Register page;<br/>
+=> Connect back and front for authentication/authorization;<br/>
+=> Flight reservation process;<br/>
+=> Dockerizing<br/>
+=> Nginx Https<br/>
+=> Testing with Jest/Mocha/Cypress<br/>
