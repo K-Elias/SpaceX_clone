@@ -1,4 +1,5 @@
 import '@babel/register';
+import 'dotenv/config';
 
 let config;
 

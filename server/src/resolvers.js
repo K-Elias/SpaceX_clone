@@ -1,4 +1,6 @@
+import { AuthenticationError } from 'apollo-server-express';
 import isEmail from 'isemail';
+
 import { paginateResults } from './utils';
 
 export default {
@@ -29,6 +31,7 @@ export default {
       dataSources.launchAPI.getLaunchById({ launchId: id }),
     me: (_, __, { dataSources: { userAPI } }) => {
       const user = userAPI.getUser();
+      if (!user) throw new AuthenticationError('not authenticated');
       return user;
     }
   },

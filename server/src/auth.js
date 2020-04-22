@@ -14,6 +14,7 @@ export const createRefreshToken = user =>
   });
 
 export const sendRefreshToken = (token, res) =>
-  res.cookie("gin", token, {
+  res.cookie('gin', token, {
+    path: '/refresh_token',
     httpOnly: true
   });

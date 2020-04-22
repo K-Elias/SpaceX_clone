@@ -5,7 +5,11 @@ import { sign, verify } from 'jsonwebtoken';
 import isEmail from 'isemail';
 import 'dotenv/config';
 
-import { sendRefreshToken, createRefreshToken, createAccessToken } from '../auth';
+import {
+  sendRefreshToken,
+  createRefreshToken,
+  createAccessToken
+} from '../auth';
 
 const { ACCESS_KEY } = process.env;
 
@@ -20,6 +24,7 @@ export default class UserAPI extends DataSource {
   }
 
   getUser() {
+    if (!this.context.user) throw new Error('User not defined');
     return this.context.user;
   }
 
@@ -46,9 +51,16 @@ export default class UserAPI extends DataSource {
     if (!valid) throw new Error("bad password");
     sendRefreshToken(createRefreshToken(user), this.context.res);
     return {
-      accessToken: createAccessToken(user),
-      user
+      user,
+      accessToken: createAccessToken(user)
     };
+  }
+
+  async revokeRefreshToken() {
+    if (!this.context.user) return false;
+    this.context.user.tokenVersion += 1;
+    await this.context.user.save();
+    return true;
   }
 
   async bookTrips({ launchIds }) {

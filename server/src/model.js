@@ -22,6 +22,7 @@ const User = model('User', new Schema({
   image: String,
   email: String,
   password: String,
+  tokenVersion: { type: Int, default: 0 }
   trips: Array
 }, unusedField));
 

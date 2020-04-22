@@ -49,11 +49,12 @@ export default gql`
   }
 
   type User {
-    id: ID,
+    id: ID
     createdAt: String
     image: String
     email: String!
     password: String
+    tokenVersion: Int
     trips: [Launch]
   }
 
