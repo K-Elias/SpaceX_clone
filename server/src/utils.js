@@ -26,10 +26,10 @@ export const paginateResults = ({
 
 export const now = () => {
 
-  const date = new Date();
-  const aaaa = date.getUTCFullYear();
-  const gg = date.getUTCDate();
-  const mm = (date.getUTCMonth() + 1);
+  let date = new Date();
+  let aaaa = date.getUTCFullYear();
+  let gg = date.getUTCDate();
+  let mm = (date.getUTCMonth() + 1);
 
   if (gg < 10)
       gg = "0" + gg;
@@ -37,11 +37,11 @@ export const now = () => {
   if (mm < 10)
       mm = "0" + mm;
 
-  const cur_day = aaaa + "-" + mm + "-" + gg;
+  let cur_day = aaaa + "-" + mm + "-" + gg;
 
-  const hours = date.getUTCHours()
-  const minutes = date.getUTCMinutes()
-  const seconds = date.getUTCSeconds();
+  let hours = date.getUTCHours()
+  let minutes = date.getUTCMinutes()
+  let seconds = date.getUTCSeconds();
 
   if (hours < 10)
       hours = "0" + hours;

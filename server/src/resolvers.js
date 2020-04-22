@@ -87,6 +87,11 @@ export default {
         throw new Error('Input not valid: please check input field');
       const User = await dataSources.userAPI.logUser({ email, password });
       return User;
+    },
+
+    revokeUser: async (_, __, { dataSources }) => {
+      const result = await dataSources.userAPI.revokeRefreshToken();
+      return result;
     }
 
   },

@@ -74,5 +74,6 @@ export default gql`
     cancelTrip(launchId: ID!): TripUpdateResponse!
     login(email: String, password: String): UserInput
     register(image: String, email: String, password: String): User
+    revokeUser: Boolean
   }
 `
