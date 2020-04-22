@@ -1,0 +1,5 @@
+node_modules/
+.env
+./src/registerServiceWorker.js
+./src/__tests__
+package-lock.json

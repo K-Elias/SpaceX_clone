@@ -1,0 +1,17 @@
+import '@babel/register';
+import 'dotenv/config';
+
+let config;
+
+switch (process.env.NODE_ENV) {
+  case 'production':
+    config = require('./config/webpack.prod');
+    break;
+
+  case 'development':
+  default:
+    config = require('./config/webpack.dev');
+    break;
+}
+
+export default config;
