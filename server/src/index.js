@@ -79,7 +79,7 @@ import webpackConfig from '../../webpack.config.babel';
 
   app.post('/refresh_token', async (req, res) => {
     const { cookies: { gin } } = req;
-    const sendError = () => res.send({ ok: false, accessToken: null });
+    const sendError = () => res.send({ success: false, accessToken: null });
     if (!gin) return sendError();
     const payload = verify(gin, REFRESH_KEY);
     if (!payload) return sendError();
@@ -88,7 +88,7 @@ import webpackConfig from '../../webpack.config.babel';
     if (user.tokenVersion !== payload.tokenVersion)
       return sendError();
     sendRefreshToken(createRefreshToken(user), res);
-    return res.send({ ok: true, accessToken: createAccessToken(user) });
+    return res.send({ success: true, accessToken: createAccessToken(user) });
   });
 
   const apollo = new ApolloServer({
