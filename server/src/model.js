@@ -36,4 +36,4 @@ const Trip = model('Trip', new Schema({
 export default {
   User,
   Trip
-}
+};

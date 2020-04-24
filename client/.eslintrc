@@ -22,10 +22,6 @@
       "configFile": "../.babelrc"
     }
   },
-  "ignorePatterns": [
-    "node_modules",
-    "./src/registerServiceWorker.js"
-  ],
   "rules": {
     "radix": 0,
     "react/jsx-fragments": 0,

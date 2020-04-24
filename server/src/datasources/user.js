@@ -104,4 +104,4 @@ export default class UserAPI extends DataSource {
     const found = await this.store.trips.find({ userId, launchId });
     return found && found.length > 0;
   }
-}
+};

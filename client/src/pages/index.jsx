@@ -25,15 +25,15 @@ const PrivateRoute = props => {
 	const {
 		data: { isLoggedIn }
 	} = useQuery(IS_LOGGED_IN);
-	return isLoggedIn ? <Route {...props} /> : <Redirect to="/" />;
+	return isLoggedIn ? <Route {...props} /> : <Redirect to="/login" />;
 };
 
 const Pages = () => (
 	<Router>
 		<PageContainer>
 			<Switch>
-				<Route path="/" component={Login} />
-				<PrivateRoute exact path="/launch" component={Launches} />
+				<Route path="/login" component={Login} />
+				<PrivateRoute exact path="/" component={Launches} />
 				<PrivateRoute path="/launch/:launchId" component={Launch} />
 				<PrivateRoute path="/cart" component={Cart} />
 				<PrivateRoute path="/profile" component={Profile} />

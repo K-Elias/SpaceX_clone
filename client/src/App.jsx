@@ -10,10 +10,13 @@ import register from './lib/registerServiceWorker';
 import Pages from './pages/index';
 import GlobalStyle from './lib/styles';
 
+const { NODE_ENV, CLIENT_URL, CLIENT_URL_DEV } = process.env;
+const isProduction = NODE_ENV === 'production';
+
 const cache = new InMemoryCache();
 const link = new HttpLink({
-	headers: { authorization: localStorage.getItem('token') },
-	uri: process.env.CLIENT_URL,
+	headers: { authorization: '' },
+	uri: isProduction ? CLIENT_URL : CLIENT_URL_DEV,
 	typeDefs,
 	resolvers
 });
@@ -25,7 +28,7 @@ const client = new ApolloClient({
 
 cache.writeData({
 	data: {
-		isLoggedIn: !!localStorage.getItem('token')
+		isLoggedIn: false
 	}
 });
 

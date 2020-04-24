@@ -49,7 +49,8 @@ import webpackConfig from '../../webpack.config.babel';
   
   if (NODE_ENV === 'production') {
 
-    app.get(ROUTES, (req, res) => {
+    const allRoutes = ROUTES.push('/login');
+    app.get(allRoutes, (req, res) => {
       res.sendFile(path.join(__dirname, '../../dist/index.html'), err => {
         if (err) console.error(err);
       });

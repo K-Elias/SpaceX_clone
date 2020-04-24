@@ -3,8 +3,9 @@ import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
-import commonConfig from './webpack.common';
 import merge from 'webpack-merge';
+
+import commonConfig from './webpack.common';
 
 export default merge(commonConfig, {
 	mode: 'production',

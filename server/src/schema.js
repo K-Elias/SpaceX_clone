@@ -76,4 +76,4 @@ export default gql`
     register(image: String, email: String, password: String): User
     revokeUser: Boolean
   }
-`
+`;

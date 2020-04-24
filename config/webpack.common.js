@@ -1,6 +1,14 @@
+import { DefinePlugin } from 'webpack';
 import path from 'path';
+import dotenv from 'dotenv';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+
+const env = dotenv.config().parsed;
+const envKeys = Object.keys(env).reduce((prev, next) => {
+	prev[`process.env.${next}`] = JSON.stringify(env[next]);
+	return prev;
+}, {});
 
 export default {
 	entry: './client/src/App.jsx',
@@ -51,6 +59,7 @@ export default {
 		]
 	},
 	plugins: [
+		new DefinePlugin(envKeys),
 		new MiniCssExtractPlugin({
 			filename: '[name]-[contenthash].css'
 		}),
@@ -73,4 +82,4 @@ export default {
 			scriptLoading: 'defer'
 		})
 	]
-}
+};

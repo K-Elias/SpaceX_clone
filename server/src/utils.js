@@ -54,4 +54,4 @@ export const now = () => {
 
   return cur_day + " " + hours + ":" + minutes + ":" + seconds;
 
-}
+};
