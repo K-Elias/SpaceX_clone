@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { colors, unit } from '../lib/styles';
@@ -10,15 +11,16 @@ import Curve from '../../public/assets/icons/curve.svg';
 import Rocket from '../../public/assets/icons/rocket.svg';
 
 const LoginForm = ({ login }) => {
+	const history = useHistory();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const emailChange = event => setEmail(event.target.email);
+	const emailChange = e => setEmail(e.target.email);
 
-	const passwordChange = event => setPassword(event.target.password);
+	const passwordChange = e => setPassword(e.target.password);
 
-	const onSubmit = event => {
-		event.preventDefault();
+	const onSubmit = e => {
+		e.preventDefault();
 		login({ variables: { email, password } });
 	};
 
@@ -30,26 +32,32 @@ const LoginForm = ({ login }) => {
 			</Header>
 			<StyledRocket />
 			<Heading>Space Explorer</Heading>
-			<StyledForm onSubmit={onSubmit}>
-				<StyledInput
-					required
-					type="email"
-					name="email"
-					placeholder="Email"
-					data-testid="login-input"
-					onChange={emailChange}
-				/>
-				<StyledInput
-					required
-					type="password"
-					name="password"
-					placeholder="Password"
-					data-testid="pwd-input"
-					onChange={passwordChange}
-				/>
-				<Button type="submit">Log in</Button>
-				<CreateAccButton>Create account</CreateAccButton>
-			</StyledForm>
+			<StyledBlock>
+				<form onSubmit={onSubmit}>
+					<StyledInput
+						required
+						type="email"
+						name="email"
+						placeholder="Email"
+						data-testid="login-input"
+						value={email}
+						onChange={emailChange}
+					/>
+					<StyledInput
+						required
+						type="password"
+						name="password"
+						placeholder="Password"
+						data-testid="pwd-input"
+						value={password}
+						onChange={passwordChange}
+					/>
+					<Button type="submit">Log in</Button>
+				</form>
+				<CreateAccButton onClick={() => history.push('/register')}>
+					Create account
+				</CreateAccButton>
+			</StyledBlock>
 		</Container>
 	);
 };
@@ -72,7 +80,7 @@ const CreateAccButton = styled.button`
 	outline: none;
 `;
 
-const Container = styled.div`
+export const Container = styled.div`
 	height: 100%;
 	display: flex;
 	flex-direction: column;
@@ -93,7 +101,7 @@ const svgClassName = css`
 	fill: currentColor;
 `;
 
-const Header = styled.header`
+export const Header = styled.header`
 	${svgClassName};
 	width: 100%;
 	padding: ${unit * 2.5}px;
@@ -102,7 +110,7 @@ const Header = styled.header`
 	margin-bottom: 20px;
 `;
 
-const StyledLogo = styled(Logo)`
+export const StyledLogo = styled(Logo)`
 	width: 56px;
 	height: 56px;
 	display: block;
@@ -110,7 +118,7 @@ const StyledLogo = styled(Logo)`
 	position: relative;
 `;
 
-const StyledCurve = styled(Curve)`
+export const StyledCurve = styled(Curve)`
 	width: 100%;
 	height: 100%;
 	fill: ${colors.primary};
@@ -119,20 +127,19 @@ const StyledCurve = styled(Curve)`
 	left: 0;
 `;
 
-const Heading = styled.h1`
+export const Heading = styled.h1`
 	margin: ${unit * 2}px 0 ${unit * 3}px;
 `;
 
-const StyledRocket = styled(Rocket)`
+export const StyledRocket = styled(Rocket)`
 	${svgClassName};
 	width: 250px;
 `;
 
-const StyledForm = styled.form`
+export const StyledBlock = styled.div`
 	width: 100%;
 	height: 250px;
 	max-width: 406px;
-	margin-bottom: 8px;
 	padding: ${unit * 3.5}px;
 	border-radius: 3px;
 	box-shadow: 6px 6px 1px rgba(0, 0, 0, 0.25);
@@ -140,7 +147,7 @@ const StyledForm = styled.form`
 	background-color: white;
 `;
 
-const StyledInput = styled.input`
+export const StyledInput = styled.input`
 	width: 100%;
 	margin-bottom: ${unit * 2}px;
 	padding: ${unit * 1.25}px ${unit * 2.5}px;

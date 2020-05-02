@@ -71,27 +71,6 @@ export default {
         message: 'trip cancelled',
         launches: [launch],
       };
-    },
-
-    register: async (_, { image, email, password }, { dataSources }) => {
-      if (!image || !isEmail.validate(email) || (!password || password.length < 5)) {
-        throw new Error('Input not valid: please check input field');
-      }
-      const User = await dataSources.userAPI.createUser({ image, email, password });
-      if (!User) throw new Error('User not valid');
-      return User;
-    },
-
-    login: async (_, { email, password }, { dataSources }) => {
-      if (!isEmail.validate(email) && (!password || password.length < 5))
-        throw new Error('Input not valid: please check input field');
-      const User = await dataSources.userAPI.logUser({ email, password });
-      return User;
-    },
-
-    revokeUser: async (_, __, { dataSources }) => {
-      const result = await dataSources.userAPI.revokeRefreshToken();
-      return result;
     }
 
   },

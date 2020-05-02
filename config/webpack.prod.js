@@ -1,4 +1,3 @@
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import path from 'path';
 import TerserPlugin from 'terser-webpack-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
@@ -43,7 +42,6 @@ export default merge(commonConfig, {
 		}
 	},
 	plugins: [
-		new CleanWebpackPlugin(),
 		new CompressionPlugin({ cache: true })
 	]
 });

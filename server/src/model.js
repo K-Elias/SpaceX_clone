@@ -16,24 +16,19 @@ const createdAt = {
 
 const unusedField = { versionKey: false };
 
-const User = model('User', new Schema({
+export const User = model('User', new Schema({
   id,
   createdAt,
-  image: String,
   email: String,
   password: String,
+  image: { type: String, default: null },
   tokenVersion: { type: Number, default: 0 },
   trips: Array
 }, unusedField));
 
-const Trip = model('Trip', new Schema({
+export const Trip = model('Trip', new Schema({
   id,
   createdAt,
   launchId: Number,
   userId: Number
 }, unusedField));
-
-export default {
-  User,
-  Trip
-};

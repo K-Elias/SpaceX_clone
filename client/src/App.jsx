@@ -10,13 +10,15 @@ import register from './lib/registerServiceWorker';
 import Pages from './pages/index';
 import GlobalStyle from './lib/styles';
 
-const { NODE_ENV, CLIENT_URL, CLIENT_URL_DEV } = process.env;
-const isProduction = NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
+
+const client_url = '';
+const client_url_dev = 'http://localhost:4000/graphql';
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
-	headers: { authorization: '' },
-	uri: isProduction ? CLIENT_URL : CLIENT_URL_DEV,
+	uri: isProduction ? client_url : client_url_dev,
+	credentials: 'include',
 	typeDefs,
 	resolvers
 });
@@ -28,7 +30,8 @@ const client = new ApolloClient({
 
 cache.writeData({
 	data: {
-		isLoggedIn: false
+		isLoggedIn: false,
+		token: null
 	}
 });
 

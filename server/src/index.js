@@ -10,16 +10,11 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import historyApiFallback from 'connect-history-api-fallback-exclusions';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import mongoose from 'mongoose';
-import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 
-import {
-  createAccessToken,
-  sendRefreshToken,
-  createRefreshToken
-} from './auth';
-import store from './model';
+import { User } from './model';
+import Authentication, { isAuth } from './auth';
 import typeDefs from './schema';
 import resolvers from './resolvers';
 import UserAPI from './datasources/user';
@@ -31,21 +26,23 @@ import webpackConfig from '../../webpack.config.babel';
   const {
     PORT,
     NODE_ENV,
+    CLIENT_URL,
+    CLIENT_URL_DEV,
     ROUTES,
     ACCESS_KEY,
-    REFRESH_KEY,
     MONGO_DB
   } = process.env;
 
   const app = express();
 
-  app.use(cors({ credentials: true }))
-    .use(cookieParser())
-    .use(compression())
-    .use(helmet())
+  const url = NODE_ENV === 'production' ? CLIENT_URL : CLIENT_URL_DEV; 
+
+  app.use(cookieParser())
     .use(express.urlencoded({ extended: true }))
     .use(express.json())
-    .use(express.static(path.resolve(__dirname, '../../dist')));
+    .use(express.static(path.resolve(__dirname, '../../dist')))
+    .use(helmet())
+    .use(compression());
   
   if (NODE_ENV === 'production') {
 
@@ -78,40 +75,18 @@ import webpackConfig from '../../webpack.config.babel';
 
   }
 
-  app.post('/refresh_token', async (req, res) => {
-    const { cookies: { gin } } = req;
-    const sendError = () => res.send({ success: false, accessToken: null });
-    if (!gin) return sendError();
-    const payload = verify(gin, REFRESH_KEY);
-    if (!payload) return sendError();
-    const user = await store.User.findOne({ id: payload.userId });
-    if (!user) return sendError();
-    if (user.tokenVersion !== payload.tokenVersion)
-      return sendError();
-    sendRefreshToken(createRefreshToken(user), res);
-    return res.send({ success: true, accessToken: createAccessToken(user) });
-  });
+  Authentication(app);
 
   const apollo = new ApolloServer({
     typeDefs,
     resolvers,
     dataSources: () => ({
       launchAPI: new LaunchAPI(),
-      userAPI: new UserAPI({ store })
+      userAPI: new UserAPI()
     }),
-    context: async ({ req, res }) => {
-      const { headers, path } = req;
-      let user = null;
-      const headerRegex = /(Bearer)\s.+/gm;
-      if (ROUTES.includes(path) && headerRegex.test(headers['authorization'])) {
-        const authorization = headers['authorization'];
-        const token = authorization.split(' ')[1];
-        const payload = verify(token, ACCESS_KEY);
-        if (Object.keys(payload).includes('userId'))
-          user = await store.User.findOne({ id: payload.userId });
-      }
-      return { user, res };
-    }
+    context: ({ req }) => ({
+      user: isAuth(req)
+    })
   });
 
   apollo.applyMiddleware({ app });
@@ -124,7 +99,7 @@ import webpackConfig from '../../webpack.config.babel';
     .then(() =>
       server.listen({ port: PORT }, err => {
         if (err) throw new Error(err);
-        console.log(`🚀 Server ready at http://localhost:${PORT}${apollo.graphqlPath}`);
+        console.log(`🚀 Server ready at ${url}:${PORT}${apollo.graphqlPath}`);
       })
     )
     .catch(err => console.error(err));

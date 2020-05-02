@@ -15,8 +15,7 @@ const Login = () => {
 	const [login, { loading, error }] = useMutation(LOGIN_USER, {
 		// eslint-disable-next-line no-shadow
 		onCompleted({ login }) {
-			localStorage.setItem('token', login);
-			client.writeData({ data: { isLoggedIn: true } });
+			client.writeData({ data: { isLoggedIn: true, token: login } });
 		}
 	});
 	if (loading) return <Loading />;

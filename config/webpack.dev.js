@@ -13,7 +13,7 @@ export default merge(commonConfig, {
 	plugins: [
 		new HotModuleReplacementPlugin(),
 		new SourceMapDevToolPlugin({
-			filename: '[name].js.map'
+			filename: '[file].map[query]'
 		})
 	]
 });
