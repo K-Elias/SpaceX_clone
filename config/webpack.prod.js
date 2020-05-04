@@ -1,8 +1,8 @@
-import path from 'path';
-import TerserPlugin from 'terser-webpack-plugin';
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 import merge from 'webpack-merge';
+import path from 'path';
 
 import commonConfig from './webpack.common';
 

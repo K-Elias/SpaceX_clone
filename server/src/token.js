@@ -13,15 +13,13 @@ export const createRefreshToken = user =>
     expiresIn: '7d'
   });
 
-export const sendAccessToken = (accesstoken, res) => {
+export const sendAccessToken = (accesstoken, res) =>
   res.status(200).send({
     accesstoken
   });
-};
 
-export const sendRefreshToken = (token, res) => {
+export const sendRefreshToken = (token, res) =>
   res.cookie('gin', token, {
     path: '/refresh_token',
     httpOnly: true
   });
-};

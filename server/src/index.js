@@ -48,8 +48,8 @@ import webpackConfig from '../../webpack.config.babel';
 
     const allRoutes = ROUTES.push('/login');
     app.get(allRoutes, (req, res) => {
-      res.sendFile(path.join(__dirname, '../../dist/index.html'), err => {
-        if (err) console.error(err);
+      res.sendFile(path.join(__dirname, '../../dist/index.html'), error => {
+        if (error) console.error(error);
       });
     });
 
@@ -97,12 +97,12 @@ import webpackConfig from '../../webpack.config.babel';
 
   mongoose.connect(MONGO_DB, { useUnifiedTopology: true })
     .then(() =>
-      server.listen({ port: PORT }, err => {
-        if (err) throw new Error(err);
+      server.listen({ port: PORT }, error => {
+        if (error) throw new Error(error);
         console.log(`🚀 Server ready at ${url}:${PORT}${apollo.graphqlPath}`);
       })
     )
-    .catch(err => console.error(err));
+    .catch(error => console.error(error));
 
   process.on('SIGTERM', () =>
     server.close(() => console.log('Process terminated'))
