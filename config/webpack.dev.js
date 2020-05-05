@@ -1,16 +1,13 @@
 import { SourceMapDevToolPlugin, HotModuleReplacementPlugin } from 'webpack';
 import merge from 'webpack-merge';
-import 'dotenv/config';
 
 import commonConfig from './webpack.common';
-
-const { PORT } = process.env;
 
 export default merge(commonConfig, {
 	mode: 'development',
 	entry: [
-		'./client/src/App.jsx',
-		`webpack-hot-middleware/client?path=//localhost:${PORT}/__webpack_hmr&reload=true`
+		'./client/src/index.jsx',
+		'webpack-hot-middleware/client?path=//localhost:4000/__webpack_hmr&reload=true'
 	],
 	output: {
 		filename: '[name].js',

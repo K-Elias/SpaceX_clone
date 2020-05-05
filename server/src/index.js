@@ -2,6 +2,7 @@ import { createServer } from 'http';
 import { ApolloServer } from 'apollo-server-express';
 import { verify } from 'jsonwebtoken';
 import express from 'express';
+import bodyParser from 'body-parser';
 import path from 'path';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -38,8 +39,8 @@ import webpackConfig from '../../webpack.config.babel';
   const url = NODE_ENV === 'production' ? CLIENT_URL : CLIENT_URL_DEV; 
 
   app.use(cookieParser())
-    .use(express.urlencoded({ extended: true }))
-    .use(express.json())
+    .use(bodyParser.urlencoded({ extended: false }))
+    .use(bodyParser.json())
     .use(express.static(path.resolve(__dirname, '../../dist')))
     .use(helmet())
     .use(compression());

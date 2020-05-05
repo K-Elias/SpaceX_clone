@@ -4,7 +4,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 
 export default {
-	entry: './client/src/App.jsx',
+	entry: './client/src/index.jsx',
 	output: {
 		path: path.join(__dirname, '../dist'),
 		publicPath: '/'

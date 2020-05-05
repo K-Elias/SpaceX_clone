@@ -1,8 +1,4 @@
 import { DataSource } from 'apollo-datasource';
-import { UserInputError } from 'apollo-server-express';
-import { genSalt, hash, compare } from 'bcrypt';
-import { sign, verify } from 'jsonwebtoken';
-import isEmail from 'isemail';
 
 import { User, Trip } from '../model';
 
@@ -19,6 +15,13 @@ export default class UserAPI extends DataSource {
     if (!this.context.user) throw new Error('User not defined');
     return this.context.user;
   }
+  
+  async bookTrip({ launchId }) {
+    const user = this.context.user;
+    if (!user) return null;
+    const res = await Trips.find({ userId: user.id, launchId });
+    return res && res.length ? res[0].get() : false;
+  }
 
   async bookTrips({ launchIds }) {
     let results = [];
@@ -29,12 +32,6 @@ export default class UserAPI extends DataSource {
     return results;
   }
 
-  async bookTrip({ launchId }) {
-    const user = this.context.user;
-    if (!user) return null;
-    const res = await Trips.find({ userId: user.id, launchId });
-    return res && res.length ? res[0].get() : false;
-  }
 
   async cancelTrip({ launchId }) {
     const user = this.context.user;

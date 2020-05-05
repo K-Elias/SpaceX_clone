@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 
 import {
 	StyledBlock,
@@ -11,9 +10,10 @@ import {
 	Heading,
 	StyledRocket
 } from './login-form';
+import { clientURL } from '../App';
 import Button from './button';
 
-const RegisterForm = ({ register }) => {
+const RegisterForm = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [repassword, setRepassword] = useState('');
@@ -22,11 +22,21 @@ const RegisterForm = ({ register }) => {
 	const passwordChange = e => setPassword(e.target.value);
 	const repasswordChange = e => setRepassword(e.target.value);
 
-	const onSubmit = async e => {
+	const onSubmit = e => {
 		e.preventDefault();
-		if (password !== repassword) return null;
-		const res = await register({ variables: { email, password } });
-		return res;
+		if (password !== repassword) throw new Error('bad password');
+		const url = clientURL();
+		const formData = new FormData();
+		formData.append('email', email);
+		formData.append('password', password);
+		fetch(`${url}/register`, {
+			method: 'POST',
+			body: formData
+		}).then(() => {
+			setEmail('');
+			setPassword('');
+			setRepassword('');
+		});
 	};
 
 	return (
@@ -71,10 +81,6 @@ const RegisterForm = ({ register }) => {
 			</StyledBlock>
 		</Container>
 	);
-};
-
-RegisterForm.propTypes = {
-	register: PropTypes.func
 };
 
 export default RegisterForm;

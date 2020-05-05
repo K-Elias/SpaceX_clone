@@ -29,11 +29,12 @@ export const isAuth = async req => {
 export default app => {
 
   app.post('/register', async (req, res) => {
-    const { body: { email, password } } = req;
+    const { email, password } = req.body;
     if (!isEmail.validate(email) || (!password || password.length < 5))
-      res.status(400).send('Input not valid: please check input field');
+      return res.status(400).send('Input not valid: please check input field');
+    const exist = await User.findOne({ email });
+    if (!exist) return res.status(400).send('User already exits');
     try {
-      await User.findOne({ email });
       const salt = await genSalt();
       const hashedPassword = await hash(password, salt);
       const user = new User({
@@ -49,7 +50,7 @@ export default app => {
   });
 
   app.post('/login', async (req, res) => {
-    const { body : { email, password } } = req;
+    const { email, password } = req.body;
     if (!isEmail.validate(email) || !password)
       res.status(400).send('Input not valid: please check input field');
     try {
@@ -71,8 +72,7 @@ export default app => {
   });
 
   app.post('/refresh_token', (req, res) => {
-    if (!Object.keys(req.cookie).includes('gin'))
-      return res.sendStatus(401);
+    if (!req.cookie) return res.sendStatus(401);
     const { cookie: { gin } } = req;
     verify(gin, REFRESH_KEY, async (err, decoded) => {
       try {

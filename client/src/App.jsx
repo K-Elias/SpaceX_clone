@@ -1,50 +1,59 @@
-import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
+import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { render } from 'react-dom';
-import React from 'react';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import React, { useState, useEffect, createContext } from 'react';
+import PropTypes from 'prop-types';
 
-import { resolvers, typeDefs } from './lib/resolvers';
-import register from './lib/registerServiceWorker';
-import Pages from './pages/index';
-import GlobalStyle from './lib/styles';
+export const UserContext = createContext();
 
-const isProduction = process.env.NODE_ENV === 'production';
+export const clientURL = () => {
+	const { NODE_ENV } = process.env;
+	const isProd = NODE_ENV === 'production';
+	const prodURL = '';
+	const devUrl = 'http://localhost:4000';
+	return isProd ? prodURL : devUrl;
+};
 
-const client_url = '';
-const client_url_dev = 'http://localhost:4000/graphql';
+const checkRefreshToken = async setUser => {
+	const url = clientURL();
+	const result = await (
+		await fetch(`${url}/refresh_token`, {
+			method: 'POST',
+			credentials: 'include',
+			headers: { 'Content-Type': 'application/json' }
+		})
+	).json();
+	setUser({
+		accesstoken: result.accesstoken
+	});
+};
 
-const cache = new InMemoryCache();
-const link = new HttpLink({
-	uri: isProduction ? client_url : client_url_dev,
-	credentials: 'include',
-	typeDefs,
-	resolvers
-});
+const App = ({ children }) => {
+	const [user, setUser] = useState({ accesstoken: '' });
 
-const client = new ApolloClient({
-	cache,
-	link
-});
+	useEffect(() => {
+		checkRefreshToken(setUser);
+	}, []);
 
-cache.writeData({
-	data: {
-		isLoggedIn: false,
-		token: null
-	}
-});
+	const link = new HttpLink({
+		uri: clientURL(),
+		headers: { authorization: `Bearer ${user.accesstoken}` }
+	});
 
-const app = document.getElementById('app');
+	const cache = new InMemoryCache();
 
-if (app) {
-	render(
-		<ApolloProvider client={client}>
-			<GlobalStyle />
-			<Pages />
-		</ApolloProvider>,
-		app
+	const client = new ApolloClient({ cache, link });
+
+	return (
+		<UserContext.Provider value={[user, setUser]}>
+			<ApolloProvider client={client}>{children}</ApolloProvider>
+		</UserContext.Provider>
 	);
-} else throw new Error('Error: check index.html file');
+};
 
-register();
+App.propTypes = {
+	children: PropTypes.array
+};
+
+export default App;

@@ -1,27 +1,36 @@
+import { useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import { colors, unit } from '../lib/styles';
+import { clientURL } from '../App';
 import Button from './button';
 import space from '../../public/assets/images/space.jpg';
 import Logo from '../../public/assets/icons/logo.svg';
 import Curve from '../../public/assets/icons/curve.svg';
 import Rocket from '../../public/assets/icons/rocket.svg';
 
-const LoginForm = ({ login }) => {
+const LoginForm = () => {
 	const history = useHistory();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const emailChange = e => setEmail(e.target.email);
+	const emailChange = e => setEmail(e.target.value);
 
-	const passwordChange = e => setPassword(e.target.password);
+	const passwordChange = e => setPassword(e.target.value);
+
+	const handleClick = () => history.push('/register');
 
 	const onSubmit = e => {
 		e.preventDefault();
-		login({ variables: { email, password } });
+		const url = clientURL();
+		fetch(`${url}/login`, {
+			method: 'POST',
+			body: { email, password }
+		}).then(() => {
+			setEmail('');
+			setPassword('');
+		});
 	};
 
 	return (
@@ -40,7 +49,6 @@ const LoginForm = ({ login }) => {
 						name="email"
 						placeholder="Email"
 						data-testid="login-input"
-						value={email}
 						onChange={emailChange}
 					/>
 					<StyledInput
@@ -49,21 +57,14 @@ const LoginForm = ({ login }) => {
 						name="password"
 						placeholder="Password"
 						data-testid="pwd-input"
-						value={password}
 						onChange={passwordChange}
 					/>
 					<Button type="submit">Log in</Button>
 				</form>
-				<CreateAccButton onClick={() => history.push('/register')}>
-					Create account
-				</CreateAccButton>
+				<CreateAccButton onClick={handleClick}>Create account</CreateAccButton>
 			</StyledBlock>
 		</Container>
 	);
-};
-
-LoginForm.propTypes = {
-	login: PropTypes.func
 };
 
 const CreateAccButton = styled.button`

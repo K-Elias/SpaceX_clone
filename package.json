@@ -86,6 +86,7 @@
     "apollo-server-express": "^2.11.0",
     "apollo-server-testing": "^2.11.0",
     "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "connect-history-api-fallback-exclusions": "^1.5.1",
     "cookie-parser": "^1.4.5",

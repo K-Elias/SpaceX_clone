@@ -4,11 +4,10 @@ import {
 	Switch,
 	Redirect
 } from 'react-router-dom';
-import { useQuery } from '@apollo/react-hooks';
-import React, { Fragment } from 'react';
-import gql from 'graphql-tag';
+import React, { Fragment, useContext } from 'react';
 
 import { Footer, PageContainer } from '../components';
+import { UserContext } from '../App';
 import Launch from './launch';
 import Launches from './launches';
 import Cart from './cart';
@@ -16,12 +15,6 @@ import Profile from './profile';
 import Register from './register';
 import Login from './login';
 import Error from './error';
-
-const IS_LOGGED_IN = gql`
-	query IsUserLoggedIn {
-		isLoggedIn @client
-	}
-`;
 
 const Layout = props => (
 	<Fragment>
@@ -33,10 +26,8 @@ const Layout = props => (
 );
 
 const PrivateRoute = props => {
-	const {
-		data: { isLoggedIn }
-	} = useQuery(IS_LOGGED_IN);
-	return isLoggedIn ? <Layout {...props} /> : <Redirect to="/" />;
+	const [user] = useContext(UserContext);
+	return user.accessToken ? <Layout {...props} /> : <Redirect to="/" />;
 };
 
 const Pages = () => (
