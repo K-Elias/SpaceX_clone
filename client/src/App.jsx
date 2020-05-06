@@ -41,7 +41,6 @@ const App = ({ children }) => {
 			headers: { authorization: `Bearer ${user.accessToken}` }
 		})
 	});
-	console.log(user, client);
 
 	return (
 		<UserContext.Provider value={[user, setUser]}>
