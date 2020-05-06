@@ -4,46 +4,44 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import React, { useState, useEffect, createContext } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 export const UserContext = createContext();
 
-export const clientURL = () => {
+const clientURL = () => {
 	const { NODE_ENV } = process.env;
 	const isProd = NODE_ENV === 'production';
 	const prodURL = '';
-	const devUrl = 'http://localhost:4000';
+	const devUrl = 'http://localhost:4000/graphql';
 	return isProd ? prodURL : devUrl;
 };
 
-const checkRefreshToken = async setUser => {
-	const url = clientURL();
-	const result = await (
-		await fetch(`${url}/refresh_token`, {
-			method: 'POST',
-			credentials: 'include',
-			headers: { 'Content-Type': 'application/json' }
-		})
-	).json();
-	setUser({
-		accesstoken: result.accesstoken
+const checkRefreshToken = setUser => {
+	axios({
+		method: 'POST',
+		url: '/refresh_token',
+		credentials: 'include',
+		headers: { 'Content-Type': 'application/json' }
+	}).then(({ accessToken }) => {
+		setUser({ accessToken });
 	});
 };
 
 const App = ({ children }) => {
-	const [user, setUser] = useState({ accesstoken: '' });
+	const [user, setUser] = useState({ accessToken: '' });
 
 	useEffect(() => {
 		checkRefreshToken(setUser);
 	}, []);
 
-	const link = new HttpLink({
-		uri: clientURL(),
-		headers: { authorization: `Bearer ${user.accesstoken}` }
+	const client = new ApolloClient({
+		cache: new InMemoryCache(),
+		link: new HttpLink({
+			uri: clientURL(),
+			headers: { authorization: `Bearer ${user.accessToken}` }
+		})
 	});
-
-	const cache = new InMemoryCache();
-
-	const client = new ApolloClient({ cache, link });
+	console.log(user, client);
 
 	return (
 		<UserContext.Provider value={[user, setUser]}>

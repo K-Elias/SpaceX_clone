@@ -1,9 +1,10 @@
 import { useHistory } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
+import axios from 'axios';
 
 import { colors, unit } from '../lib/styles';
-import { clientURL } from '../App';
+import { UserContext } from '../App';
 import Button from './button';
 import space from '../../public/assets/images/space.jpg';
 import Logo from '../../public/assets/icons/logo.svg';
@@ -11,6 +12,7 @@ import Curve from '../../public/assets/icons/curve.svg';
 import Rocket from '../../public/assets/icons/rocket.svg';
 
 const LoginForm = () => {
+	const [user, setUser] = useContext(UserContext);
 	const history = useHistory();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -23,15 +25,17 @@ const LoginForm = () => {
 
 	const onSubmit = e => {
 		e.preventDefault();
-		const url = clientURL();
-		fetch(`${url}/login`, {
-			method: 'POST',
-			body: { email, password }
-		}).then(() => {
-			setEmail('');
-			setPassword('');
-		});
+		axios
+			.post('/login', { email, password })
+			.then(({ data: { accessToken } }) => {
+				setEmail('');
+				setPassword('');
+				setUser({ accessToken });
+				history.push('/launch');
+			});
 	};
+
+	useEffect(() => {}, [user]);
 
 	return (
 		<Container>
@@ -49,6 +53,7 @@ const LoginForm = () => {
 						name="email"
 						placeholder="Email"
 						data-testid="login-input"
+						value={email}
 						onChange={emailChange}
 					/>
 					<StyledInput
@@ -57,6 +62,7 @@ const LoginForm = () => {
 						name="password"
 						placeholder="Password"
 						data-testid="pwd-input"
+						value={password}
 						onChange={passwordChange}
 					/>
 					<Button type="submit">Log in</Button>

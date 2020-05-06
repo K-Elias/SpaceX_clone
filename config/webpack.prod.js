@@ -1,12 +1,13 @@
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import CompressionPlugin from 'compression-webpack-plugin';
-import TerserPlugin from 'terser-webpack-plugin';
-import merge from 'webpack-merge';
 import path from 'path';
+import webpack from 'webpack';
+import webpackMerge from 'webpack-merge';
+import TerserPlugin from 'terser-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 
 import commonConfig from './webpack.common';
 
-export default merge(commonConfig, {
+export default webpackMerge(commonConfig, {
 	mode: 'production',
 	output: {
 		filename: '[name]-[contentHash].js',
@@ -15,6 +16,7 @@ export default merge(commonConfig, {
 	optimization: {
 		minimizer: [
 			new TerserPlugin({
+				test: /\.jsx?$/,
 				extractComments: false,
 				terserOptions: {
 					output: {
@@ -28,11 +30,6 @@ export default merge(commonConfig, {
 		],
 		splitChunks: {
 			cacheGroups: {
-				react: {
-					test: /[\\/]node_modules[\\/]((react)*)[\\/]/,
-					name: 'react',
-					chunks: 'all'
-				},
 				commons: {
 					test: /[\\/]node_modules[\\/]/,
 					name: 'commons',
@@ -42,6 +39,7 @@ export default merge(commonConfig, {
 		}
 	},
 	plugins: [
-		new CompressionPlugin({ cache: true })
+		new CompressionPlugin({ cache: true }),
+		new webpack.optimize.ModuleConcatenationPlugin()
 	]
 });

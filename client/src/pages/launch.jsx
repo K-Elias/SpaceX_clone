@@ -28,7 +28,7 @@ const Launch = () => {
 	});
 
 	if (loading) return <Loading />;
-	if (error) return <p>ERROR: {error.message}</p>;
+	if (error) return <p>ERROR: {error[0].message}</p>;
 	if (!data || (!!data && data.launch)) return <p>Not found</p>;
 
 	return (

@@ -13,9 +13,9 @@ export const createRefreshToken = user =>
     expiresIn: '7d'
   });
 
-export const sendAccessToken = (accesstoken, res) =>
+export const sendAccessToken = (accessToken, res) =>
   res.status(200).send({
-    accesstoken
+    accessToken
   });
 
 export const sendRefreshToken = (token, res) =>

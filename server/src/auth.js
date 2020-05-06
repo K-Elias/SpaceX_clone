@@ -1,7 +1,8 @@
 import { genSalt, hash, compare } from 'bcrypt';
 import { verify } from 'jsonwebtoken'; 
-import isEmail from 'isemail';
 import 'dotenv/config';
+
+import  { isEmail } from './utils';
 
 import {
   createAccessToken,
@@ -11,7 +12,7 @@ import {
 } from './token';
 import { User } from './model';
 
-const { REFRESH_KEY, ROUTES } = process.env;
+const { ACCESS_KEY, REFRESH_KEY, ROUTES } = process.env;
 
 export const isAuth = async req => {
   let user = null;
@@ -30,7 +31,7 @@ export default app => {
 
   app.post('/register', async (req, res) => {
     const { email, password } = req.body;
-    if (!isEmail.validate(email) || (!password || password.length < 5))
+    if (!isEmail(email) || (!password || password.length < 5))
       return res.status(400).send('Input not valid: please check input field');
     const exist = await User.findOne({ email });
     if (!exist) return res.status(400).send('User already exits');
@@ -51,7 +52,7 @@ export default app => {
 
   app.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    if (!isEmail.validate(email) || !password)
+    if (!isEmail(email) || !password)
       res.status(400).send('Input not valid: please check input field');
     try {
       const user = await User.findOne({ email })
@@ -64,7 +65,7 @@ export default app => {
     }
   });
 
-  app.post('/logout', async (req, res) => {
+  app.post('/logout', (req, res) => {
     res.clearCookie('gin', { path: '/refresh_token' });
     res.status(200).json({
       message: 'Logged out',

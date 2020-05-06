@@ -27,6 +27,7 @@ const Layout = props => (
 
 const PrivateRoute = props => {
 	const [user] = useContext(UserContext);
+	console.log('page:', user);
 	return user.accessToken ? <Layout {...props} /> : <Redirect to="/" />;
 };
 

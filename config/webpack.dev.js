@@ -1,9 +1,9 @@
 import { SourceMapDevToolPlugin, HotModuleReplacementPlugin } from 'webpack';
-import merge from 'webpack-merge';
+import webpackMerge from 'webpack-merge';
 
 import commonConfig from './webpack.common';
 
-export default merge(commonConfig, {
+export default webpackMerge(commonConfig, {
 	mode: 'development',
 	entry: [
 		'./client/src/index.jsx',

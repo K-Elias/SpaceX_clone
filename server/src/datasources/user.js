@@ -19,7 +19,7 @@ export default class UserAPI extends DataSource {
   async bookTrip({ launchId }) {
     const user = this.context.user;
     if (!user) return null;
-    const res = await Trips.find({ userId: user.id, launchId });
+    const res = await Trip.find({ userId: user.id, launchId });
     return res && res.length ? res[0].get() : false;
   }
 
@@ -36,13 +36,13 @@ export default class UserAPI extends DataSource {
   async cancelTrip({ launchId }) {
     const user = this.context.user;
     if (!user) return null;
-    return !!Trips.delete({ userId: user.id, launchId });
+    return !!Trip.delete({ userId: user.id, launchId });
   }
 
   async getLaunchIdsByUser() {
     const user = this.context.user;
     if (!user) return null;
-    const found = await Trips.find({ userId: user.id });
+    const found = await Trip.find({ userId: user.id });
     return found && found.length
       ? found.map(l => l.dataValues.launchId).filter(l => !!l)
       : [];
@@ -51,7 +51,7 @@ export default class UserAPI extends DataSource {
   async isBookedOnLaunch({ launchId }) {
     const user = this.context.user;
     if (!user) return null;
-    const found = await Trips.find({ userId, launchId });
+    const found = await Trip.find({ userId: user.id, launchId });
     return found && found.length > 0;
   }
 };
