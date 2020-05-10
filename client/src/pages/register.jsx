@@ -1,6 +1,8 @@
 import { useHistory } from 'react-router-dom';
 import React from 'react';
 import axios from 'axios';
+import alertConfirm from 'react-alert-confirm';
+import 'react-alert-confirm/dist/index.css';
 
 import { StyledInput, StyledBlock } from './login';
 import { EntryPage, Button, useForm } from '../components';
@@ -14,10 +16,15 @@ const initial_value = {
 const Register = () => {
 	const history = useHistory();
 
-	const onSubmit = clear =>
+	const onSubmit = () =>
 		axios.post('/register', { ...values }).then(() => {
-			clear({});
-			history.push('/');
+			alertConfirm({
+				title: 'Congrats!',
+				content:
+					'Your account has successfully been created, login to access the universe now!',
+				onOk: () => history.push('/'),
+				onCancel: () => history.push('/')
+			});
 		});
 
 	const {

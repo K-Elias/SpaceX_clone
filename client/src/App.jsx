@@ -8,13 +8,11 @@ import axios from 'axios';
 
 export const UserContext = createContext();
 
-const clientURL = () => {
-	const { NODE_ENV } = process.env;
-	const isProd = NODE_ENV === 'production';
-	const prodURL = '';
-	const devUrl = 'http://localhost:4000/graphql';
-	return isProd ? prodURL : devUrl;
-};
+const { NODE_ENV } = process.env;
+const isProd = NODE_ENV === 'production';
+const prodURL = '';
+const devUrl = 'http://localhost:4000/graphql';
+const uri = isProd ? prodURL : devUrl;
 
 const checkRefreshToken = setUser => {
 	axios({
@@ -42,7 +40,7 @@ const App = ({ children }) => {
 	const client = new ApolloClient({
 		cache: new InMemoryCache(),
 		link: new HttpLink({
-			uri: clientURL(),
+			uri,
 			headers: { authorization: `Bearer ${user.accessToken}` }
 		})
 	});

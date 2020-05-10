@@ -13,9 +13,9 @@ export default webpackMerge(commonConfig, {
 		filename: '[name].js',
 		chunkFilename: '[id]-chunk.js'
 	},
-	devtool: 'eval-source-map',
+	devtool: 'inline-source-map',
 	plugins: [
-		new HotModuleReplacementPlugin(),
+		new HotModuleReplacementPlugin({}),
 		new SourceMapDevToolPlugin({
 			filename: '[file].map[query]'
 		})
