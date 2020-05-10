@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import styled from 'styled-components';
 
-import { Container } from '../components/login-form';
+import { Container } from '../components/entryPage';
 
 const Error = () => (
 	<Container>

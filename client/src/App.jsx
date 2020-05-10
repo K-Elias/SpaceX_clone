@@ -28,9 +28,14 @@ const checkRefreshToken = setUser => {
 };
 
 const App = ({ children }) => {
-	const [user, setUser] = useState({ accessToken: '' });
+	const [user, setUser] = useState({
+		email: '',
+		accessToken: ''
+	});
 
 	useEffect(() => {
+		const { pathname } = window.location;
+		if (pathname === '/' || pathname === '/register') return;
 		checkRefreshToken(setUser);
 	}, []);
 
@@ -43,7 +48,7 @@ const App = ({ children }) => {
 	});
 
 	return (
-		<UserContext.Provider value={[user, setUser]}>
+		<UserContext.Provider value={{ user, setUser }}>
 			<ApolloProvider client={client}>{children}</ApolloProvider>
 		</UserContext.Provider>
 	);

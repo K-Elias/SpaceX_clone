@@ -17,13 +17,13 @@ export default class UserAPI extends DataSource {
   }
   
   async bookTrip({ launchId }) {
-    const user = this.context.user;
-    if (!user) return null;
-    const res = await Trip.find({ userId: user.id, launchId });
+    if (!this.context.user) throw new Error('User not defined');
+    const res = await Trip.find({ userId: this.context.user.id, launchId });
     return res && res.length ? res[0].get() : false;
   }
 
   async bookTrips({ launchIds }) {
+    if (!this.context.user) throw new Error('User not defined');
     let results = [];
     for (const launchId of launchIds) {
       const res = await this.bookTrip({ launchId });
@@ -32,26 +32,22 @@ export default class UserAPI extends DataSource {
     return results;
   }
 
-
   async cancelTrip({ launchId }) {
-    const user = this.context.user;
-    if (!user) return null;
-    return !!Trip.delete({ userId: user.id, launchId });
+    if (!this.context.user) throw new Error('User not defined');
+    return !!Trip.delete({ userId: this.context.user.id, launchId });
   }
 
   async getLaunchIdsByUser() {
-    const user = this.context.user;
-    if (!user) return null;
-    const found = await Trip.find({ userId: user.id });
+    if (!this.context.user) throw new Error('User not defined');
+    const found = await Trip.find({ userId: this.context.user.id });
     return found && found.length
       ? found.map(l => l.dataValues.launchId).filter(l => !!l)
       : [];
   }
 
   async isBookedOnLaunch({ launchId }) {
-    const user = this.context.user;
-    if (!user) return null;
-    const found = await Trip.find({ userId: user.id, launchId });
+    if (!this.context.user) throw new Error('User not defined');
+    const found = await Trip.find({ userId: this.context.user.id, launchId });
     return found && found.length > 0;
   }
 };

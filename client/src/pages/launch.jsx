@@ -1,7 +1,7 @@
-import React, { Fragment } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 import { useParams } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import gql from 'graphql-tag';
 
 import { Loading, Header, LaunchDetail } from '../components';
 import { ActionButton } from '../containers';
@@ -28,7 +28,7 @@ const Launch = () => {
 	});
 
 	if (loading) return <Loading />;
-	if (error) return <p>ERROR: {error[0].message}</p>;
+	if (error) return <p>ERROR: {error}</p>;
 	if (!data || (!!data && data.launch)) return <p>Not found</p>;
 
 	return (

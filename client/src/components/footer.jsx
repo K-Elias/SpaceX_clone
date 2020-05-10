@@ -11,7 +11,7 @@ import { colors, unit } from '../lib/styles';
 export default () => (
 	<Container>
 		<InnerContainer>
-			<MenuItem to="/">
+			<MenuItem to="/launch">
 				<HomeIcon />
 				Home
 			</MenuItem>

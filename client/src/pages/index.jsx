@@ -26,8 +26,10 @@ const Layout = props => (
 );
 
 const PrivateRoute = props => {
-	const [user] = useContext(UserContext);
-	return user.accessToken ? <Layout {...props} /> : <Redirect to="/" />;
+	const {
+		user: { accessToken }
+	} = useContext(UserContext);
+	return accessToken ? <Layout {...props} /> : <Redirect to="/" />;
 };
 
 const Pages = () => (

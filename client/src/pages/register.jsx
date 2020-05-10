@@ -1,20 +1,80 @@
-import { useMutation } from '@apollo/react-hooks';
+import { useHistory } from 'react-router-dom';
 import React from 'react';
-import gql from 'graphql-tag';
+import axios from 'axios';
 
-import { Loading, RegisterForm } from '../components';
+import { StyledInput, StyledBlock } from './login';
+import { EntryPage, Button, useForm } from '../components';
 
-const REGISTER_USER = gql`
-	mutation register($email: String!, $password: String!) {
-		register(email: $email, password: $password)
-	}
-`;
+const initial_value = {
+	email: '',
+	password: '',
+	repassword: ''
+};
 
 const Register = () => {
-	const [register, { loading, error }] = useMutation(REGISTER_USER);
-	if (loading) return <Loading />;
-	if (error) return <p>An error occurred</p>;
-	return <RegisterForm register={register} />;
+	const history = useHistory();
+
+	const onSubmit = clear =>
+		axios.post('/register', { ...values }).then(() => {
+			clear({});
+			history.push('/');
+		});
+
+	const {
+		handleSubmit,
+		handleChange,
+		handleBlur,
+		values,
+		errors,
+		isSubmitting
+	} = useForm(initial_value, onSubmit);
+
+	return (
+		<EntryPage>
+			<StyledBlock>
+				<form onSubmit={handleSubmit}>
+					<StyledInput
+						required
+						type="email"
+						name="email"
+						placeholder="Type your email"
+						data-testid="login-input"
+						onBlur={handleBlur}
+						value={values.email}
+						onChange={handleChange}
+					/>
+					{errors.email && <p className="error-text">{errors.email}</p>}
+					<StyledInput
+						required
+						type="password"
+						name="password"
+						placeholder="Choose a password"
+						data-testid="pwd-input"
+						onBlur={handleBlur}
+						value={values.password}
+						onChange={handleChange}
+					/>
+					{errors.password && <p className="error-text">{errors.password}</p>}
+					<StyledInput
+						required
+						type="password"
+						name="repassword"
+						placeholder="Confirm your password"
+						data-testid="repwd-input"
+						onBlur={handleBlur}
+						value={values.repassword}
+						onChange={handleChange}
+					/>
+					{errors.repassword && (
+						<p className="error-text">{errors.repassword}</p>
+					)}
+					<Button disabled={isSubmitting} type="suxbmit">
+						Register
+					</Button>
+				</form>
+			</StyledBlock>
+		</EntryPage>
+	);
 };
 
 export default Register;

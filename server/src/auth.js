@@ -34,7 +34,7 @@ export default app => {
     if (!isEmail(email) || (!password || password.length < 5))
       return res.status(400).send('Input not valid: please check input field');
     const exist = await User.findOne({ email });
-    if (!exist) return res.status(400).send('User already exits');
+    if (exist) return res.status(400).send('User already exits');
     try {
       const salt = await genSalt();
       const hashedPassword = await hash(password, salt);
@@ -53,7 +53,7 @@ export default app => {
   app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     if (!isEmail(email) || !password)
-      res.status(400).send('Input not valid: please check input field');
+      return res.status(400).send('Input not valid: please check input field');
     try {
       const user = await User.findOne({ email })
       await compare(password, user.password);
@@ -79,7 +79,7 @@ export default app => {
       try {
         const user = await User.findOne({ id: decoded.userId });
         if (user.tokenVersion !== payload.tokenVersion)
-          res.status(400).send({ success: false, accessToken: null });
+          return res.status(400).send({ success: false, accessToken: null });
         sendRefreshToken(createRefreshToken(user), res);
         sendAccessToken(createAccessToken(user), user.email, res);
       } catch (_) {
