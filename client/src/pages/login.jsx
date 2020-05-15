@@ -3,9 +3,10 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
-import { colors, unit } from '../lib/styles';
 import { UserContext } from '../App';
+import { colors, unit } from '../lib/styles';
 import { EntryPage, useForm, Button } from '../components';
+import validate from '../lib/validate';
 
 const initial_value = {
 	email: '',
@@ -17,10 +18,17 @@ const Login = () => {
 	const { setUser } = useContext(UserContext);
 
 	const onSubmit = () =>
-		axios.post('/login', { ...values }).then(({ data: { accessToken } }) => {
-			setUser({ email: values.email, accessToken });
-			history.push('/launch');
-		});
+		axios({
+			method: 'POST',
+			url: '/login',
+			credentials: 'include',
+			headers: { 'Content-Type': 'application/json' },
+			data: { ...values }
+		})
+			.then(({ data: { token } }) =>
+				setUser({ email: values.email, token, page: '/launch' })
+			)
+			.then(() => history.push('/launch'));
 
 	const {
 		handleSubmit,
@@ -29,7 +37,7 @@ const Login = () => {
 		values,
 		errors,
 		isSubmitting
-	} = useForm(initial_value, onSubmit);
+	} = useForm(initial_value, validate, onSubmit);
 
 	const handleClick = () => history.push('/register');
 
@@ -43,24 +51,22 @@ const Login = () => {
 						name="email"
 						placeholder="Email"
 						data-testid="login-input"
+						classStyle={errors.email}
 						onBlur={handleBlur}
 						value={values.email}
 						onChange={handleChange}
 					/>
-					{errors.email && <span className="error-text">{errors.email}</span>}
 					<StyledInput
 						required
 						type="password"
 						name="password"
 						placeholder="Password"
 						data-testid="pwd-input"
+						classStyle={errors.password}
 						onBlur={handleBlur}
 						value={values.password}
 						onChange={handleChange}
 					/>
-					{errors.password && (
-						<span className="error-text">{errors.password}</span>
-					)}
 					<Button disabled={isSubmitting} type="submit">
 						Log in
 					</Button>
@@ -100,7 +106,9 @@ export const StyledInput = styled.input`
 	width: 100%;
 	margin-bottom: ${unit * 2}px;
 	padding: ${unit * 1.25}px ${unit * 2.5}px;
-	border: 1px solid ${colors.grey};
+	border-width: 1px;
+	border-style: solid;
+	border-color: ${props => (props.classStyle ? colors.error : colors.grey)};
 	font-size: 16px;
 	outline: none;
 	&&:focus: {

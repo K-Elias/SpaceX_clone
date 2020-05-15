@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
 import { colors, unit } from '../lib/styles';
 
 export const menuItemClassName = css`
@@ -19,9 +18,10 @@ export const menuItemClassName = css`
 	}
 `;
 
-const MenuItem = styled(Link)`
+const MenuItem = styled.span`
 	${menuItemClassName};
 	text-decoration: none;
+	cursor: pointer;
 `;
 
 export default MenuItem;

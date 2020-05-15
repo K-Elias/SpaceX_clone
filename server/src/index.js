@@ -5,13 +5,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import helmet from 'helmet';
+import cors from 'cors';
 import compression from 'compression';
 import webpack from 'webpack';
+import cookieParser from 'cookie-parser';
+import mongoose from 'mongoose';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import historyApiFallback from 'connect-history-api-fallback-exclusions';
 import webpackHotMiddleware from 'webpack-hot-middleware';
-import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 
 import { User } from './model';
@@ -38,7 +39,10 @@ import webpackConfig from '../../webpack.config.babel';
 
   const url = NODE_ENV === 'production' ? CLIENT_URL : CLIENT_URL_DEV; 
 
-  app.use(cookieParser())
+  app.use(cors({
+    credentials: true
+  }))
+    .use(cookieParser())
     .use(bodyParser.urlencoded({ extended: false }))
     .use(bodyParser.json())
     .use(express.static(path.resolve(__dirname, '../../dist')))
@@ -90,7 +94,7 @@ import webpackConfig from '../../webpack.config.babel';
     })
   });
 
-  apollo.applyMiddleware({ app });
+  apollo.applyMiddleware({ app, cors: false });
 
   const server = createServer(app);
 
@@ -100,7 +104,7 @@ import webpackConfig from '../../webpack.config.babel';
     .then(() =>
       server.listen({ port: PORT }, error => {
         if (error) throw new Error(error);
-        console.log(`🚀 Server ready at ${url}:${PORT}${apollo.graphqlPath}`);
+        console.log(`🚀 Server ready at ${url}${apollo.graphqlPath}`);
       })
     )
     .catch(error => console.error(error));

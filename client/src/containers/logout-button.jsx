@@ -12,13 +12,12 @@ export default () => {
 	const history = useHistory();
 	const handleClick = () => {
 		axios({
-			url: '/logout',
 			method: 'POST',
+			url: '/logout',
 			credentials: 'include'
-		}).then(() => {
-			setUser({ email: '', accessToken: '' });
-			history.push('/');
-		});
+		})
+			.then(() => setUser({ email: '', token: '', page: '/' }))
+			.then(() => history.push('/'));
 	};
 
 	return (

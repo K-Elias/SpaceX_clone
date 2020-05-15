@@ -54,15 +54,11 @@ export default app => {
     const { email, password } = req.body;
     if (!isEmail(email) || !password)
       return res.status(400).send('Input not valid: please check input field');
-    try {
-      const user = await User.findOne({ email })
-      await compare(password, user.password);
-      sendRefreshToken(createRefreshToken(user), res);
-      sendAccessToken(createAccessToken(user), res);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error });
-    }
+    const user = await User.findOne({ email })
+    const verif = await compare(password, user.password);
+    if (!verif) return res.status(400).send('Bad password');
+    sendRefreshToken(createRefreshToken(user), res);
+    sendAccessToken(createAccessToken(user), res);
   });
 
   app.post('/logout', (req, res) => {
@@ -72,20 +68,17 @@ export default app => {
     });
   });
 
-  app.post('/refresh_token', (req, res) => {
-    if (!req.cookie) return res.sendStatus(401);
-    const { cookie: { gin } } = req;
-    verify(gin, REFRESH_KEY, async (err, decoded) => {
-      try {
-        const user = await User.findOne({ id: decoded.userId });
-        if (user.tokenVersion !== payload.tokenVersion)
-          return res.status(400).send({ success: false, accessToken: null });
-        sendRefreshToken(createRefreshToken(user), res);
-        sendAccessToken(createAccessToken(user), user.email, res);
-      } catch (_) {
-        res.status(500).send({ success: false, accessToken: null });
-      }
-    });
+  app.post('/refresh_token', async (req, res) => {
+    if (!req.cookies) return res.sendStatus(401);
+    const { cookies: { gin } } = req;
+    const decoded = verify(gin, REFRESH_KEY);
+    if (!decoded)
+      return res.status(500).send({ success: false, accessToken: null });
+    const user = await User.findOne({ id: decoded.userId });
+    if (user.tokenVersion !== decoded.tokenVersion)
+      return res.status(400).send({ success: false, accessToken: null });
+    sendRefreshToken(createRefreshToken(user), res);
+    sendAccessToken(createAccessToken(user), res);
   });
 
   app.post('/revoke_token', (req, res) => {

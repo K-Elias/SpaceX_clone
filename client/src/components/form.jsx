@@ -1,9 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 
-import validate from '../lib/validate';
-
-const useForm = (initial_State, callback) => {
+const useForm = (initial_State, validate, callback) => {
 	const [values, setValues] = useState({ ...initial_State });
 	const [errors, setErrors] = useState({});
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -11,7 +8,7 @@ const useForm = (initial_State, callback) => {
 	useEffect(() => {
 		let checkErrors = 0;
 		Object.keys(errors).forEach(error => {
-			if (errors[error] !== null) checkErrors += 1;
+			if (errors[error]) checkErrors += 1;
 		});
 		if (checkErrors === 0 && isSubmitting) {
 			callback();

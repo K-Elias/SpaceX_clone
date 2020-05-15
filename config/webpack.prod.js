@@ -41,7 +41,7 @@ export default webpackMerge(commonConfig, {
           chunks: "all"
         },
 				commons: {
-					test: /[\\/]client[\\/]src[\\/]pages[\\/]/,
+					test: /[\\/]client[\\/]src[\\/]/,
 					chunks: "all",
 					minSize: 0
 				}
