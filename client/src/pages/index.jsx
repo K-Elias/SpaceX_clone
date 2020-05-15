@@ -54,21 +54,19 @@ const PrivateRoute = props => {
 	return user.token ? <Layout {...props} /> : <Redirect to="/" />;
 };
 
-const Pages = () => {
-	return (
-		<Router>
-			<Switch>
-				<LogRoute exact path="/" component={Login} />
-				<LogRoute path="/register" component={Register} />
-				<PrivateRoute exact path="/launch" component={Launches} />
-				<PrivateRoute path="/launch/:launchId" component={Launch} />
-				<PrivateRoute path="/cart" component={Cart} />
-				<PrivateRoute path="/profile" component={Profile} />
-				<Route path="*" component={Error} />
-			</Switch>
-		</Router>
-	);
-};
+const Pages = () => (
+	<Router>
+		<Switch>
+			<LogRoute exact path="/" component={Login} />
+			<LogRoute path="/register" component={Register} />
+			<PrivateRoute exact path="/launch" component={Launches} />
+			<PrivateRoute path="/launch/:launchId" component={Launch} />
+			<PrivateRoute path="/cart" component={Cart} />
+			<PrivateRoute path="/profile" component={Profile} />
+			<Route path="*" component={Error} />
+		</Switch>
+	</Router>
+);
 
 Layout.propTypes = {
 	component: PropTypes.func.isRequired,

@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 
-import { UserContext } from '../App';
 import MenuItem from './menu-item';
 import LogoutButton from '../containers/logout-button';
 import HomeIcon from '../../public/assets/icons/home.svg';
@@ -11,13 +10,9 @@ import ProfileIcon from '../../public/assets/icons/profile.svg';
 import { colors, unit } from '../lib/styles';
 
 export default () => {
-	const { user, setUser } = useContext(UserContext);
 	const history = useHistory();
 
-	const handleClick = link => {
-		setUser({ ...user, page: link });
-		history.push(link);
-	};
+	const handleClick = link => history.push(link);
 
 	return (
 		<Container>

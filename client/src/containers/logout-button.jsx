@@ -16,7 +16,7 @@ export default () => {
 			url: '/logout',
 			credentials: 'include'
 		})
-			.then(() => setUser({ email: '', token: '', page: '/' }))
+			.then(() => setUser({ email: '', token: '' }))
 			.then(() => history.push('/'));
 	};
 
