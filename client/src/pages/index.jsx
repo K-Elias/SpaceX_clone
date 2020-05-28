@@ -4,11 +4,11 @@ import {
 	Switch,
 	Redirect
 } from 'react-router-dom';
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { Fragment, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 
-import { Footer, PageContainer } from '../components';
+import { Footer, PageContainer, Loading } from '../components';
+import { refreshToken } from '../lib/auth';
 import { UserContext } from '../App';
 import Launch from './launch';
 import Launches from './launches';
@@ -32,45 +32,45 @@ const Layout = ({ component: Component, ...rest }) => (
 	/>
 );
 
-const LogRoute = () => {
-	const { user } = useContext(UserContext);
-	return user.token ? <Redirect to="/launch" /> : <Login />;
+const PrivateRoute = props => {
+	const { token } = useContext(UserContext);
+	return token ? <Layout {...props} /> : <Redirect to="/login" />;
 };
 
-const PrivateRoute = props => {
-	const { user, setUser } = useContext(UserContext);
+const Pages = () => {
+	const { setToken } = useContext(UserContext);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		if (!user.token) {
-			axios({
-				method: 'POST',
-				url: '/refresh_token',
-				credentials: 'include',
-				headers: { 'Content-Type': 'application/json' }
-			}).then(({ data: { token } }) => setUser({ ...user, token }));
-		}
+		refreshToken()
+			.then(({ data }) => {
+				setToken(data.token);
+				setLoading(false);
+			})
+			.catch(() => setLoading(false));
 	}, []);
 
-	return user.token ? <Layout {...props} /> : <Redirect to="/" />;
+	if (loading) return <Loading />;
+
+	return (
+		<Router>
+			<Switch>
+				<Route exact path="/" render={() => <Redirect to="/login" />} />
+				<Route path="/login" component={Login} />
+				<Route path="/register" component={Register} />
+				<PrivateRoute exact path="/launch" component={Launches} />
+				<PrivateRoute path="/launch/:launchId" component={Launch} />
+				<PrivateRoute path="/cart" component={Cart} />
+				<PrivateRoute path="/profile" component={Profile} />
+				<Route path="*" component={Error} />
+			</Switch>
+		</Router>
+	);
 };
 
-const Pages = () => (
-	<Router>
-		<Switch>
-			<LogRoute exact path="/" component={Login} />
-			<LogRoute path="/register" component={Register} />
-			<PrivateRoute exact path="/launch" component={Launches} />
-			<PrivateRoute path="/launch/:launchId" component={Launch} />
-			<PrivateRoute path="/cart" component={Cart} />
-			<PrivateRoute path="/profile" component={Profile} />
-			<Route path="*" component={Error} />
-		</Switch>
-	</Router>
-);
-
 Layout.propTypes = {
-	component: PropTypes.func.isRequired,
-	path: PropTypes.string.isRequired
+	path: PropTypes.string.isRequired,
+	component: PropTypes.func.isRequired
 };
 
 PrivateRoute.propTypes = {

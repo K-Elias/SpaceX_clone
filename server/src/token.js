@@ -9,17 +9,11 @@ export const createAccessToken = user =>
   });
 
 export const createRefreshToken = user =>
-  sign({ userId: user.id, tokenVersion: user.tokenVersion }, REFRESH_KEY, {
-    expiresIn: '7d'
-  });
+  sign({ userId: user.id, tokenVersion: user.tokenVersion },
+    REFRESH_KEY, { expiresIn: '7d' });
 
 export const sendAccessToken = (token, res) =>
-  res.status(200).send({
-    token
-  });
+  res.status(200).send({ token });
 
 export const sendRefreshToken = (token, res) =>
-  res.cookie('gin', token, {
-    httpOnly: true,
-    path: '/refresh_token'
-  });
+  res.cookie('gin', token, { httpOnly: true });

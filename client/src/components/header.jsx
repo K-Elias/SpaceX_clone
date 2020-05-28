@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import { UserContext } from '../App';
 import { unit, colors } from '../lib/styles';
 import dog1 from '../../public/assets/images/dog-1.png';
 import dog2 from '../../public/assets/images/dog-2.png';
@@ -20,15 +19,14 @@ const pickAvatarByEmail = email => {
 };
 
 const Header = ({ image, children = 'Space Explorer' }) => {
-	const { user } = useContext(UserContext);
-	const avatar = image || pickAvatarByEmail(user.email);
+	const avatar = image || pickAvatarByEmail('later');
 
 	return (
 		<Container>
 			<Image round={!image} src={avatar} alt="Space dog" />
 			<div>
 				<h2 style={{ color: 'black' }}>{children}</h2>
-				<Subheading>{user.email}</Subheading>
+				<Subheading>Later</Subheading>
 			</div>
 		</Container>
 	);

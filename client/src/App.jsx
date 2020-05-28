@@ -2,8 +2,10 @@ import { HttpLink } from 'apollo-link-http';
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import PropTypes from 'prop-types';
+
+import { refreshToken } from './lib/auth';
 
 export const UserContext = createContext();
 
@@ -14,24 +16,27 @@ const devUrl = 'http://localhost:4000/graphql';
 const uri = isProd ? prodURL : devUrl;
 
 const App = ({ children }) => {
-	const [user, setUser] = useState({
-		email: '',
-		token: ''
-	});
+	const [token, setToken] = useState('');
+
+	useEffect(() => {
+		setTimeout(() => {
+			refreshToken().then(({ data }) => setToken(data.token));
+		}, 900000);
+	}, [token]);
 
 	const client = new ApolloClient({
 		cache: new InMemoryCache(),
 		link: new HttpLink({
 			uri,
 			headers: {
-				authorization: `Bearer ${user.token}`
+				authorization: `Bearer ${token}`
 			},
 			credentials: 'include'
 		})
 	});
 
 	return (
-		<UserContext.Provider value={{ user, setUser }}>
+		<UserContext.Provider value={{ token, setToken }}>
 			<ApolloProvider client={client}>{children}</ApolloProvider>
 		</UserContext.Provider>
 	);

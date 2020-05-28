@@ -7,7 +7,7 @@ import 'react-alert-confirm/dist/index.css';
 import { StyledInput, StyledBlock } from './login';
 import { EntryPage, Button, useForm } from '../components';
 
-const initial_value = {
+const initialState = {
 	email: '',
 	password: '',
 	repassword: ''
@@ -34,7 +34,7 @@ const Register = () => {
 		values,
 		errors,
 		isSubmitting
-	} = useForm(initial_value, onSubmit);
+	} = useForm(initialState, onSubmit);
 
 	return (
 		<EntryPage>

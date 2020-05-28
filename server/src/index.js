@@ -40,6 +40,7 @@ import webpackConfig from '../../webpack.config.babel';
   const url = NODE_ENV === 'production' ? CLIENT_URL : CLIENT_URL_DEV; 
 
   app.use(cors({
+    origin: url,
     credentials: true
   }))
     .use(cookieParser())

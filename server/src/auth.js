@@ -62,7 +62,7 @@ export default app => {
   });
 
   app.post('/logout', (req, res) => {
-    res.clearCookie('gin', { path: '/refresh_token' });
+    res.clearCookie('gin');
     res.status(200).json({
       message: 'Logged out',
     });
@@ -70,6 +70,7 @@ export default app => {
 
   app.post('/refresh_token', async (req, res) => {
     if (!req.cookies) return res.sendStatus(401);
+    if (!req.cookies.gin) return res.sendStatus(401);
     const { cookies: { gin } } = req;
     const decoded = verify(gin, REFRESH_KEY);
     if (!decoded)

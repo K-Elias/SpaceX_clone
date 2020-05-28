@@ -1,34 +1,27 @@
 import { useHistory } from 'react-router-dom';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 
-import { UserContext } from '../App';
-import { colors, unit } from '../lib/styles';
 import { EntryPage, useForm, Button } from '../components';
+import { colors, unit } from '../lib/styles';
+import { UserContext } from '../App';
+import { login } from '../lib/auth';
 import validate from '../lib/validate';
 
-const initial_value = {
+const initialState = {
 	email: '',
 	password: ''
 };
 
 const Login = () => {
 	const history = useHistory();
-	const { setUser } = useContext(UserContext);
+	const { setToken } = useContext(UserContext);
 
 	const onSubmit = () =>
-		axios({
-			method: 'POST',
-			url: '/login',
-			credentials: 'include',
-			headers: { 'Content-Type': 'application/json' },
-			data: { ...values }
-		})
-			.then(({ data: { token } }) =>
-				setUser({ email: values.email, token, page: '/launch' })
-			)
-			.then(() => history.push('/launch'));
+		login(values).then(({ data }) => {
+			setToken(data.token);
+			history.push('/launch');
+		});
 
 	const {
 		handleSubmit,
@@ -37,7 +30,7 @@ const Login = () => {
 		values,
 		errors,
 		isSubmitting
-	} = useForm(initial_value, validate, onSubmit);
+	} = useForm(initialState, validate, onSubmit);
 
 	const handleClick = () => history.push('/register');
 

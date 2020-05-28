@@ -1,31 +1,29 @@
+import { useHistory } from 'react-router-dom';
 import React from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
 
+import { colors, unit } from '../lib/styles';
 import MenuItem from './menu-item';
 import LogoutButton from '../containers/logout-button';
 import HomeIcon from '../../public/assets/icons/home.svg';
 import CartIcon from '../../public/assets/icons/cart.svg';
 import ProfileIcon from '../../public/assets/icons/profile.svg';
-import { colors, unit } from '../lib/styles';
 
 export default () => {
 	const history = useHistory();
 
-	const handleClick = link => history.push(link);
-
 	return (
 		<Container>
 			<InnerContainer>
-				<MenuItem onClick={() => handleClick('/launch')}>
+				<MenuItem onClick={() => history.push('/launch')}>
 					<HomeIcon />
 					Home
 				</MenuItem>
-				<MenuItem onClick={() => handleClick('/cart')}>
+				<MenuItem onClick={() => history.push('/cart')}>
 					<CartIcon />
 					Cart
 				</MenuItem>
-				<MenuItem onClick={() => handleClick('/profile')}>
+				<MenuItem onClick={() => history.push('/profile')}>
 					<ProfileIcon />
 					Profile
 				</MenuItem>

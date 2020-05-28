@@ -1,23 +1,21 @@
 import { useHistory } from 'react-router-dom';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 
 import { UserContext } from '../App';
+import { logout } from '../lib/auth';
 import { menuItemClassName } from '../components/menu-item';
 import ExitIcon from '../../public/assets/icons/exit.svg';
 
 export default () => {
-	const { setUser } = useContext(UserContext);
+	const { setToken } = useContext(UserContext);
 	const history = useHistory();
+
 	const handleClick = () => {
-		axios({
-			method: 'POST',
-			url: '/logout',
-			credentials: 'include'
-		})
-			.then(() => setUser({ email: '', token: '' }))
-			.then(() => history.push('/'));
+		logout().then(() => {
+			setToken('');
+			history.push('/login');
+		});
 	};
 
 	return (
