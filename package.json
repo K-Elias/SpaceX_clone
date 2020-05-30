@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/Makoto71/space_xy.git"
+    "url": "git@github.com:K-Elias/SpaceX_clone.git"
   },
   "keywords": [],
   "author": "Kim Woojin",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/Makoto71/space_xy/issues"
+    "url": "https://github.com/K-Elias/SpaceX_clone/issues"
   },
-  "homepage": "https://gitlab.com/Makoto71/space_xy#readme",
+  "homepage": "https://github.com/K-Elias/SpaceX_clone/blob/master/README.md",
   "engines": {
     "node": ">= 10.0.0",
     "npm": ">= 6.0.0"
