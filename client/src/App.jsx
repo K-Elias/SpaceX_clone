@@ -9,28 +9,20 @@ import { refreshToken } from './lib/auth';
 
 export const UserContext = createContext();
 
-const { NODE_ENV } = process.env;
-const isProd = NODE_ENV === 'production';
-const prodURL = '';
-const devUrl = 'http://localhost:4000/graphql';
-const uri = isProd ? prodURL : devUrl;
-
 const App = ({ children }) => {
 	const [token, setToken] = useState('');
 
 	useEffect(() => {
-		setTimeout(() => {
+		const time = setTimeout(() => {
 			refreshToken().then(({ data }) => setToken(data.token));
 		}, 900000);
+		return () => clearTimeout(time);
 	}, [token]);
 
 	const client = new ApolloClient({
 		cache: new InMemoryCache(),
 		link: new HttpLink({
-			uri,
-			headers: {
-				authorization: `Bearer ${token}`
-			},
+			headers: { authorization: `Bearer ${token}` },
 			credentials: 'include'
 		})
 	});

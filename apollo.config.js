@@ -1,5 +1,5 @@
 module.exports = {
   service: {
-    name: "spaceX_clone"
+    name: "Space_X"
   }
 }
