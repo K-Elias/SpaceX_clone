@@ -1,44 +1,49 @@
-import { ApolloClient } from 'apollo-client';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
+import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { render } from 'react-dom';
-import React from 'react';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import React, { useState, useEffect, createContext } from 'react';
+import PropTypes from 'prop-types';
 
-import { resolvers, typeDefs } from './lib/resolvers';
-import register from './lib/registerServiceWorker';
-import Pages from './pages/index';
-import GlobalStyle from './lib/styles';
+import { refreshToken } from './lib/auth';
 
-const cache = new InMemoryCache();
-const link = new HttpLink({
-	headers: { authorization: localStorage.getItem('token') },
-	uri: process.env.CLIENT_URL,
-	typeDefs,
-	resolvers
-});
+export const UserContext = createContext();
 
-const client = new ApolloClient({
-	cache,
-	link
-});
+const { NODE_ENV } = process.env;
+const isProd = NODE_ENV === 'production';
+const prodURL = '';
+const devUrl = 'http://localhost:4000/graphql';
+const uri = isProd ? prodURL : devUrl;
 
-cache.writeData({
-	data: {
-		isLoggedIn: !!localStorage.getItem('token')
-	}
-});
+const App = ({ children }) => {
+	const [token, setToken] = useState('');
 
-const app = document.getElementById('app');
+	useEffect(() => {
+		setTimeout(() => {
+			refreshToken().then(({ data }) => setToken(data.token));
+		}, 900000);
+	}, [token]);
 
-if (app) {
-	render(
-		<ApolloProvider client={client}>
-			<GlobalStyle />
-			<Pages />
-		</ApolloProvider>,
-		app
+	const client = new ApolloClient({
+		cache: new InMemoryCache(),
+		link: new HttpLink({
+			uri,
+			headers: {
+				authorization: `Bearer ${token}`
+			},
+			credentials: 'include'
+		})
+	});
+
+	return (
+		<UserContext.Provider value={{ token, setToken }}>
+			<ApolloProvider client={client}>{children}</ApolloProvider>
+		</UserContext.Provider>
 	);
-} else throw new Error('Error: check index.html file');
+};
 
-register();
+App.propTypes = {
+	children: PropTypes.array
+};
+
+export default App;

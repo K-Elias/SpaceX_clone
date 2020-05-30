@@ -1,16 +1,23 @@
-import React from 'react';
+import { useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { useApolloClient } from '@apollo/react-hooks';
 
+import { UserContext } from '../App';
+import { logout } from '../lib/auth';
 import { menuItemClassName } from '../components/menu-item';
 import ExitIcon from '../../public/assets/icons/exit.svg';
 
 export default () => {
-	const client = useApolloClient();
+	const { setToken } = useContext(UserContext);
+	const history = useHistory();
+
 	const handleClick = () => {
-		client.writeData({ data: { isLoggedIn: false } });
-		localStorage.clear();
+		logout().then(() => {
+			setToken('');
+			history.push('/login');
+		});
 	};
+
 	return (
 		<StyledButton onClick={handleClick}>
 			<ExitIcon />
@@ -24,4 +31,5 @@ const StyledButton = styled.button`
 	background: none;
 	border: none;
 	padding: 0;
+	cursor: pointer;
 `;

@@ -19,15 +19,14 @@ const pickAvatarByEmail = email => {
 };
 
 const Header = ({ image, children = 'Space Explorer' }) => {
-	const email = atob(localStorage.getItem('token'));
-	const avatar = image || pickAvatarByEmail(email);
+	const avatar = image || pickAvatarByEmail('later');
 
 	return (
 		<Container>
 			<Image round={!image} src={avatar} alt="Space dog" />
 			<div>
 				<h2 style={{ color: 'black' }}>{children}</h2>
-				<Subheading>{email}</Subheading>
+				<Subheading>Later</Subheading>
 			</div>
 		</Container>
 	);

@@ -1,19 +1,23 @@
 import { SourceMapDevToolPlugin, HotModuleReplacementPlugin } from 'webpack';
-import commonConfig from './webpack.common';
-import merge from 'webpack-merge';
+import webpackMerge from 'webpack-merge';
 
-export default merge(commonConfig, {
+import commonConfig from './webpack.common';
+
+export default webpackMerge(commonConfig, {
 	mode: 'development',
-	entry: ['./client/src/App.jsx', 'webpack-hot-middleware/client'],
+	entry: [
+		'./client/src/index.jsx',
+		'webpack-hot-middleware/client?path=//localhost:4000/__webpack_hmr&reload=true'
+	],
 	output: {
 		filename: '[name].js',
 		chunkFilename: '[id]-chunk.js'
 	},
-	devtool: 'eval-source-map',
+	devtool: 'inline-source-map',
 	plugins: [
-		new HotModuleReplacementPlugin(),
+		new HotModuleReplacementPlugin({}),
 		new SourceMapDevToolPlugin({
-			filename: '[name].js.map'
+			filename: '[file].map[query]'
 		})
 	]
 });

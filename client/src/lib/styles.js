@@ -8,7 +8,8 @@ export const colors = {
 	background: '#f7f8fa',
 	grey: '#d8d9e0',
 	text: '#343c5a',
-	textSecondary: '#747790'
+	textSecondary: '#747790',
+	error: '#a8324e'
 };
 
 const GlobalStyle = createGlobalStyle`

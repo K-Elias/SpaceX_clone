@@ -1,12 +1,14 @@
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import path from 'path';
+import webpack from 'webpack';
+import webpackMerge from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import ImageminPlugin from 'imagemin-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
-import commonConfig from './webpack.common';
-import merge from 'webpack-merge';
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 
-export default merge(commonConfig, {
+import commonConfig from './webpack.common';
+
+export default webpackMerge(commonConfig, {
 	mode: 'production',
 	output: {
 		filename: '[name]-[contentHash].js',
@@ -15,6 +17,7 @@ export default merge(commonConfig, {
 	optimization: {
 		minimizer: [
 			new TerserPlugin({
+				test: /\.jsx?$/,
 				extractComments: false,
 				terserOptions: {
 					output: {
@@ -24,25 +27,30 @@ export default merge(commonConfig, {
 				cache: true,
 				parallel: true
 			}),
-			new OptimizeCSSAssetsPlugin()
+			new OptimizeCSSAssetsPlugin({})
 		],
+		moduleIds: 'hashed',
+		runtimeChunk: {
+			name: 'manifest',
+		},
 		splitChunks: {
 			cacheGroups: {
-				react: {
-					test: /[\\/]node_modules[\\/]((react)*)[\\/]/,
-					name: 'react',
-					chunks: 'all'
-				},
+				vendor: {
+          name: "node_vendors",
+          test: /[\\/]node_modules[\\/]/,
+          chunks: "all"
+        },
 				commons: {
-					test: /[\\/]node_modules[\\/]/,
-					name: 'commons',
-					chunks: 'all'
+					test: /[\\/]client[\\/]src[\\/]/,
+					chunks: "all",
+					minSize: 0
 				}
 			}
 		}
 	},
 	plugins: [
-		new CleanWebpackPlugin(),
-		new CompressionPlugin({ cache: true })
+		new ImageminPlugin({}),
+		new CompressionPlugin({ cache: true }),
+		new webpack.optimize.ModuleConcatenationPlugin({})
 	]
 });

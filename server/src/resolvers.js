@@ -1,123 +1,92 @@
 import { AuthenticationError } from 'apollo-server-express';
-import isEmail from 'isemail';
 
 import { paginateResults } from './utils';
 
 export default {
+	Query: {
+		launches: async (_, { pageSize = 20, after }, { dataSources }) => {
+			const allLaunches = await dataSources.launchAPI.getAllLaunches();
+			// we want these in reverse chronological order
+			allLaunches.reverse();
+			const launches = paginateResults({
+				after,
+				pageSize,
+				results: allLaunches
+			});
+			return {
+				launches,
+				cursor: launches.length ? launches[launches.length - 1].cursor : null,
+				// if the cursor of the end of the paginated results is the same as the
+				// last item in _all_ results, then there are no more results after this
+				hasMore: launches.length
+					? launches[launches.length - 1].cursor !==
+					  allLaunches[allLaunches.length - 1].cursor
+					: false
+			};
+		},
+		launch: (_, { id }, { dataSources }) =>
+			dataSources.launchAPI.getLaunchById({ launchId: id }),
+		me: (_, __, { dataSources: { userAPI } }) => {
+			const user = userAPI.getUser();
+			if (!user) throw new AuthenticationError('not authenticated');
+			return user;
+		}
+	},
 
-  Query: {
+	Mutation: {
+		bookTrips: async (_, { launchIds }, { dataSources }) => {
+			const results = await dataSources.userAPI.bookTrips({ launchIds });
+			const launches = await dataSources.launchAPI.getLaunchesByIds({
+				launchIds
+			});
+			const launchIdNotBooked = launchIds.filter(id => !results.includes(id));
 
-    launches: async (_, { pageSize = 20, after }, { dataSources }) => {
-      const allLaunches = await dataSources.launchAPI.getAllLaunches();
-      // we want these in reverse chronological order
-      allLaunches.reverse();
-      const launches = paginateResults({
-        after,
-        pageSize,
-        results: allLaunches
-      });
-      return {
-        launches,
-        cursor: launches.length ? launches[launches.length - 1].cursor : null,
-        // if the cursor of the end of the paginated results is the same as the
-        // last item in _all_ results, then there are no more results after this
-        hasMore: launches.length
-          ? launches[launches.length - 1].cursor !==
-            allLaunches[allLaunches.length - 1].cursor
-          : false
-      };
-    },
-    launch: (_, { id }, { dataSources }) =>
-      dataSources.launchAPI.getLaunchById({ launchId: id }),
-    me: (_, __, { dataSources: { userAPI } }) => {
-      const user = userAPI.getUser();
-      if (!user) throw new AuthenticationError('not authenticated');
-      return user;
-    }
-  },
+			return {
+				success: results && results.length === launchIds.length,
+				message:
+					results.length === launchIds.length
+						? 'trips booked successfully'
+						: `the following launches couldn't be booked: ${launchIdNotBooked}`,
+				launches
+			};
+		},
 
-  Mutation: {
+		cancelTrip: async (_, { launchId }, { dataSources }) => {
+			const result = await dataSources.userAPI.cancelTrip({ launchId });
 
-    bookTrips: async (_, { launchIds }, { dataSources }) => {
-      const results = await dataSources.userAPI.bookTrips({ launchIds });
-      const launches = await dataSources.launchAPI.getLaunchesByIds({
-        launchIds
-      });
-  
-      return {
-        success: results && results.length === launchIds.length,
-        message:
-          results.length === launchIds.length
-            ? 'trips booked successfully'
-            : `the following launches couldn't be booked: ${launchIds.filter(
-                id => !results.includes(id),
-              )}`,
-        launches
-      };
-    },
+			if (!result)
+				return {
+					success: false,
+					message: 'failed to cancel trip'
+				};
 
-    cancelTrip: async (_, { launchId }, { dataSources }) => {
-      const result = await dataSources.userAPI.cancelTrip({ launchId });
-  
-      if (!result)
-        return {
-          success: false,
-          message: 'failed to cancel trip',
-        };
-  
-      const launch = await dataSources.launchAPI.getLaunchById({ launchId });
-      return {
-        success: true,
-        message: 'trip cancelled',
-        launches: [launch],
-      };
-    },
+			const launch = await dataSources.launchAPI.getLaunchById({ launchId });
+			return {
+				success: true,
+				message: 'trip cancelled',
+				launches: [launch]
+			};
+		}
+	},
 
-    register: async (_, { image, email, password }, { dataSources }) => {
-      if (!image || !isEmail.validate(email) || (!password || password.length < 5)) {
-        throw new Error('Input not valid: please check input field');
-      }
-      const User = await dataSources.userAPI.createUser({ image, email, password });
-      if (!User) throw new Error('User not valid');
-      return User;
-    },
+	Launch: {
+		isBooked: async (launch, _, { dataSources }) =>
+			dataSources.userAPI.isBookedOnLaunch({ launchId: launch.id })
+	},
 
-    login: async (_, { email, password }, { dataSources }) => {
-      if (!isEmail.validate(email) && (!password || password.length < 5))
-        throw new Error('Input not valid: please check input field');
-      const User = await dataSources.userAPI.logUser({ email, password });
-      return User;
-    },
+	User: {
+		trips: async (_, __, { dataSources }) => {
+			// get ids of launches by user
+			const launchIds = await dataSources.userAPI.getLaunchIdsByUser();
 
-    revokeUser: async (_, __, { dataSources }) => {
-      const result = await dataSources.userAPI.revokeRefreshToken();
-      return result;
-    }
+			if (!launchIds.length) return [];
 
-  },
-
-  Launch: {
-
-    isBooked: async (launch, _, { dataSources }) =>
-      dataSources.userAPI.isBookedOnLaunch({ launchId: launch.id }),
-
-  },
-
-  User: {
-    
-    trips: async (_, __, { dataSources }) => {
-      // get ids of launches by user
-      const launchIds = await dataSources.userAPI.getLaunchIdsByUser();
-  
-      if (!launchIds.length) return [];
-  
-      // look up those launches by their ids
-      return (
-        dataSources.launchAPI.getLaunchesByIds({
-          launchIds,
-        }) || []
-      );
-    },
-  }
-
+			// look up those launches by their ids
+			return (
+				dataSources.launchAPI.getLaunchesByIds({
+					launchIds
+				}) || []
+			);
+		}
+	}
 };
