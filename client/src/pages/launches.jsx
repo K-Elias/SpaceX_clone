@@ -38,7 +38,6 @@ const Launches = () => {
 	if (loading) return <Loading />;
 	if (error) return <p>ERROR</p>;
 	if (!data) return <p>Not found</p>;
-
 	return (
 		<Fragment>
 			<Header />

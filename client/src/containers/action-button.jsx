@@ -25,7 +25,7 @@ export const CANCEL_TRIP = gql`
 	}
 `;
 
-const ActionButton = ({ isBooked, id, isInCart }) => {
+const ActionButton = ({ launch: { isBooked, id, isInCart } }) => {
 	const [mutate, { loading, error }] = useMutation(
 		isBooked ? CANCEL_TRIP : TOGGLE_CART,
 		{
@@ -38,10 +38,8 @@ const ActionButton = ({ isBooked, id, isInCart }) => {
 			]
 		}
 	);
-
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>An error occurred</p>;
-
 	const cart = isInCart ? 'Remove from Cart' : 'Add to Cart';
 	const booked = isBooked ? 'Cancel This Trip' : cart;
 	return (
@@ -54,9 +52,7 @@ const ActionButton = ({ isBooked, id, isInCart }) => {
 };
 
 ActionButton.propTypes = {
-	isBooked: PropTypes.bool,
-	id: PropTypes.string,
-	isInCart: PropTypes.bool
+	launch: PropTypes.object
 };
 
 export default ActionButton;

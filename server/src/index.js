@@ -89,9 +89,10 @@ import webpackConfig from '../../webpack.config.babel';
 			launchAPI: new LaunchAPI(),
 			userAPI: new UserAPI()
 		}),
-		context: ({ req }) => ({
-			user: isAuth(req)
-		})
+		context: async ({ req }) => {
+			const user = await isAuth(req);
+			return { user };
+		}
 	});
 
 	apollo.applyMiddleware({ app, cors: false });

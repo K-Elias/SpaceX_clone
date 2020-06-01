@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import React, { Fragment } from 'react';
 import gql from 'graphql-tag';
 
 import { Loading, Header, LaunchTile } from '../components';
@@ -8,8 +8,6 @@ import { LAUNCH_TILE_DATA } from './launches';
 export const GET_MY_TRIPS = gql`
 	query GetMyTrips {
 		me {
-			id
-			email
 			trips {
 				...LaunchTile
 			}
@@ -25,7 +23,6 @@ const Profile = () => {
 	if (loading) return <Loading />;
 	if (error) return <p>ERROR: {error.message}</p>;
 	if (!data || (!!data && !data.me)) return <p>ERROR</p>;
-
 	const $data = data.me.trips.map(launch => (
 		<LaunchTile key={launch.id} launch={launch} />
 	));

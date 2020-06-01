@@ -1,5 +1,6 @@
 /* eslint-disable multiline-ternary */
 import gql from 'graphql-tag';
+
 import { GET_CART_ITEMS } from '../pages/cart';
 
 export const typeDefs = gql`
@@ -23,11 +24,12 @@ export const resolvers = {
 				query: GET_CART_ITEMS
 			});
 
-			if (queryResult) {
-				return queryResult.cartItems.includes(launch.id);
-			}
+			if (queryResult) return queryResult.cartItems.includes(launch.id);
 			return false;
-		},
+		}
+	},
+
+	Mutation: {
 		addOrRemoveFromCart: (_, { id }, { cache }) => {
 			const queryResult = cache.readQuery({
 				query: GET_CART_ITEMS
@@ -40,7 +42,6 @@ export const resolvers = {
 						? cartItems.filter(i => i !== id)
 						: [...cartItems, id]
 				};
-
 				cache.writeQuery({ query: GET_CART_ITEMS, data });
 				return data.cartItems;
 			}

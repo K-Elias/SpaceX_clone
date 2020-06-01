@@ -1,10 +1,10 @@
-import React from 'react';
 import { useMutation } from '@apollo/react-hooks';
+import React from 'react';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 
-import Button from '../components/button';
 import { GET_LAUNCH } from './cart-item';
+import Button from '../components/button';
 
 export const BOOK_TRIPS = gql`
 	mutation BookTrips($launchIds: [ID]!) {
@@ -33,7 +33,8 @@ const BookTrips = ({ cartItems }) => {
 	});
 
 	let $content = null;
-	if (!data || (!!data && !data.bookTrips)) {
+
+	if (data && data.bookTrips && !data.bookTrips.success) {
 		$content = <p data-testid="message">{data.bookTrips.message}</p>;
 	} else {
 		$content = (
@@ -42,7 +43,6 @@ const BookTrips = ({ cartItems }) => {
 			</Button>
 		);
 	}
-
 	return $content;
 };
 

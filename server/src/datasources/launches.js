@@ -1,12 +1,10 @@
 import { RESTDataSource } from 'apollo-datasource-rest';
 import 'dotenv/config';
 
-const { API_KEY } = process.env;
-
 export default class LaunchAPI extends RESTDataSource {
 	constructor() {
 		super();
-		this.baseURL = API_KEY;
+		this.baseURL = process.env.API_KEY;
 	}
 
 	launchReducer(launch) {

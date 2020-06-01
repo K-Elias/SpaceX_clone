@@ -19,11 +19,11 @@ const Cart = () => {
 
 	let $content = null;
 
-	if (!data || (!!data && data.cartItems.length === 0)) {
+	if (!data || (data && data.cartItems.length === 0)) {
 		$content = <p data-testid="empty-message">No items in your cart</p>;
 	} else {
 		const $dataCart = data.cartItems.map(launchId => (
-			<CartItem key={launchId} launchId={launchId} />
+			<CartItem key={launchId} launchId={parseInt(launchId)} />
 		));
 		$content = (
 			<Fragment>

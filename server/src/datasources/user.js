@@ -1,6 +1,6 @@
 import { DataSource } from 'apollo-datasource';
 
-import { Trip } from '../model';
+import { Trip, User } from '../model';
 
 export default class UserAPI extends DataSource {
 	initialize(config) {
@@ -12,23 +12,29 @@ export default class UserAPI extends DataSource {
 		return this.context.user;
 	}
 
-	async bookTrip({ launchId }) {
+	bookTrip(launchId) {
 		if (!this.context.user) throw new Error('User not defined');
-		const res = await Trip.find({ userId: this.context.user.id, launchId });
-		return res && res.length ? res[0].get() : false;
+		const trip = new Trip({ userId: this.context.user.id, launchId });
+		return trip;
 	}
 
-	async bookTrips({ launchIds }) {
+	async bookTrips(launchIds) {
 		if (!this.context.user) throw new Error('User not defined');
 		const results = [];
-		launchIds.forEach(async launchId => {
-			const res = await this.bookTrip({ launchId });
+		launchIds.forEach(launchId => {
+			const res = this.bookTrip(launchId);
 			if (res) results.push(res);
 		});
-		return results;
+		await User.updateOne(
+			{ id: this.context.user.id },
+			{
+				$set: { trips: [...this.context.user.trips, ...results] }
+			}
+		);
+		return this.context.user.trips;
 	}
 
-	async cancelTrip({ launchId }) {
+	async cancelTrip(launchId) {
 		if (!this.context.user) throw new Error('User not defined');
 		return !!Trip.delete({ userId: this.context.user.id, launchId });
 	}

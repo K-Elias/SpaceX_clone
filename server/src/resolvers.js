@@ -23,8 +23,8 @@ export default {
 		},
 		launch: (_, { id }, { dataSources }) =>
 			dataSources.launchAPI.getLaunchById({ launchId: id }),
-		me: (_, __, { dataSources: { userAPI } }) => {
-			const user = userAPI.getUser();
+		me: (_, __, { dataSources }) => {
+			const user = dataSources.userAPI.getUser();
 			if (!user) throw new AuthenticationError('not authenticated');
 			return user;
 		}
@@ -32,7 +32,7 @@ export default {
 
 	Mutation: {
 		bookTrips: async (_, { launchIds }, { dataSources }) => {
-			const results = await dataSources.userAPI.bookTrips({ launchIds });
+			const results = await dataSources.userAPI.bookTrips(launchIds);
 			const launches = await dataSources.launchAPI.getLaunchesByIds({
 				launchIds
 			});
@@ -49,7 +49,7 @@ export default {
 		},
 
 		cancelTrip: async (_, { launchId }, { dataSources }) => {
-			const result = await dataSources.userAPI.cancelTrip({ launchId });
+			const result = await dataSources.userAPI.cancelTrip(launchId);
 
 			if (!result)
 				return {
@@ -57,7 +57,7 @@ export default {
 					message: 'failed to cancel trip'
 				};
 
-			const launch = await dataSources.launchAPI.getLaunchById({ launchId });
+			const launch = await dataSources.launchAPI.getLaunchById(launchId);
 			return {
 				success: true,
 				message: 'trip cancelled',
@@ -67,7 +67,7 @@ export default {
 	},
 
 	Launch: {
-		isBooked: async (launch, _, { dataSources }) =>
+		isBooked: (launch, _, { dataSources }) =>
 			dataSources.userAPI.isBookedOnLaunch({ launchId: launch.id })
 	},
 

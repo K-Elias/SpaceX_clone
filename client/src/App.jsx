@@ -5,6 +5,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import React, { useState, useEffect, createContext } from 'react';
 import PropTypes from 'prop-types';
 
+import { typeDefs, resolvers } from './lib/resolvers';
 import { refreshToken } from './lib/auth';
 
 export const UserContext = createContext();
@@ -19,12 +20,22 @@ const App = ({ children }) => {
 		return () => clearTimeout(time);
 	}, [token]);
 
+	const cache = new InMemoryCache();
+
 	const client = new ApolloClient({
-		cache: new InMemoryCache(),
+		cache,
 		link: new HttpLink({
 			headers: { authorization: `Bearer ${token}` },
 			credentials: 'include'
-		})
+		}),
+		typeDefs,
+		resolvers
+	});
+
+	cache.writeData({
+		data: {
+			cartItems: []
+		}
 	});
 
 	return (

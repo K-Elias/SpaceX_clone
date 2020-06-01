@@ -57,7 +57,7 @@ export default app => {
 		const verif = await compare(password, user.password);
 		if (!verif) return res.status(400).send('Bad password');
 		sendRefreshToken(createRefreshToken(user), res);
-		sendAccessToken(createAccessToken(user), res);
+		return sendAccessToken(createAccessToken(user), res);
 	});
 
 	app.post('/logout', (req, res) => {
@@ -80,7 +80,7 @@ export default app => {
 		if (user.tokenVersion !== decoded.tokenVersion)
 			return res.status(400).send({ success: false, accessToken: null });
 		sendRefreshToken(createRefreshToken(user), res);
-		sendAccessToken(createAccessToken(user), res);
+		return sendAccessToken(createAccessToken(user), res);
 	});
 
 	app.post('/revoke_token', (req, res) => {
