@@ -8,6 +8,8 @@ import { LAUNCH_TILE_DATA } from './launches';
 export const GET_MY_TRIPS = gql`
 	query GetMyTrips {
 		me {
+			id
+			email
 			trips {
 				...LaunchTile
 			}
@@ -18,7 +20,7 @@ export const GET_MY_TRIPS = gql`
 
 const Profile = () => {
 	const { data, loading, error } = useQuery(GET_MY_TRIPS, {
-		fetchPolicy: 'network-only'
+		fetchPolicy: 'no-cache'
 	});
 	if (loading) return <Loading />;
 	if (error) return <p>ERROR: {error.message}</p>;

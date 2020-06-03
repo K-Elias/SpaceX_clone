@@ -16,28 +16,18 @@ const createdAt = {
 
 const unusedField = { versionKey: false };
 
-const trip = new Schema(
-	{
-		id,
-		createdAt,
-		launchId: String,
-		userId: String
-	},
-	unusedField
-);
-
 const user = new Schema(
 	{
 		id,
 		createdAt,
 		email: String,
 		password: String,
-		trips: [trip],
+		trips: [String],
 		image: { type: String, default: null },
 		tokenVersion: { type: Number, default: 0 }
 	},
 	unusedField
 );
 
+// eslint-disable-next-line import/prefer-default-export
 export const User = model('User', user);
-export const Trip = model('Trip', trip);
