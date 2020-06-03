@@ -50,7 +50,7 @@ export default {
 
 		cancelTrip: async (_, { launchId }, { dataSources }) => {
 			const result = await dataSources.userAPI.cancelTrip(launchId);
-			console.log(result);
+
 			if (!result)
 				return {
 					success: false,
