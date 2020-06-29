@@ -10,13 +10,13 @@ import PropTypes from 'prop-types';
 import { Footer, PageContainer, Loading } from '../components';
 import { refreshToken } from '../lib/auth';
 import { UserContext } from '../App';
-import Launch from './launch';
 import Launches from './launches';
-import Cart from './cart';
-import Profile from './profile';
 import Register from './register';
+import Profile from './profile';
+import Launch from './launch';
 import Login from './login';
 import Error from './error';
+import Cart from './cart';
 
 const Layout = ({ component: Component, ...rest }) => (
 	<Route
@@ -38,7 +38,7 @@ const PrivateRoute = props => {
 };
 
 const Pages = () => {
-	const { setToken } = useContext(UserContext);
+	const { token, setToken } = useContext(UserContext);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -55,7 +55,13 @@ const Pages = () => {
 	return (
 		<Router>
 			<Switch>
-				<Route exact path="/" render={() => <Redirect to="/login" />} />
+				<Route
+					exact
+					path="/"
+					render={() =>
+						token ? <Redirect to="/launch" /> : <Redirect to="/login" />
+					}
+				/>
 				<Route path="/login" component={Login} />
 				<Route path="/register" component={Register} />
 				<PrivateRoute exact path="/launch" component={Launches} />

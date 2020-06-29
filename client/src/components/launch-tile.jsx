@@ -1,31 +1,45 @@
-import { Link } from 'react-router-dom';
-import React from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
+import { UserContext } from '../App';
+import { isAuthenticated } from '../lib/auth';
+import { unit } from '../lib/styles';
 import galaxy from '../../public/assets/images/galaxy.jpg';
 import iss from '../../public/assets/images/iss.jpg';
 import moon from '../../public/assets/images/moon.jpg';
-import { unit } from '../lib/styles';
 
 const backgrounds = [galaxy, iss, moon];
 
 export const getBackgroundImage = id =>
 	`url(${backgrounds[Number(id) % backgrounds.length]})`;
 
-const LaunchTile = ({ launch: { id, mission, rocket } }) => (
-	<CardClassName>
-		<StyledLink
-			to={`/launch/${id}`}
-			style={{
-				backgroundImage: getBackgroundImage(id)
-			}}
-		>
-			<h3>{mission.name}</h3>
-			<h5>{rocket.name}</h5>
-		</StyledLink>
-	</CardClassName>
-);
+const LaunchTile = ({ launch: { id, mission, rocket } }) => {
+	const { token } = useContext(UserContext);
+	const history = useHistory();
+
+	const onLinkChange = async path => {
+		const res = await isAuthenticated(token);
+		const link = res ? path : '/login';
+		history.push(link);
+	};
+
+	return (
+		<CardClassName>
+			<StyledLink
+				to={`/launch/${id}`}
+				style={{
+					backgroundImage: getBackgroundImage(id)
+				}}
+				onClick={() => onLinkChange(`/launch/${id}`)}
+			>
+				<h3>{mission.name}</h3>
+				<h5>{rocket.name}</h5>
+			</StyledLink>
+		</CardClassName>
+	);
+};
 
 LaunchTile.propTypes = {
 	launch: PropTypes.object

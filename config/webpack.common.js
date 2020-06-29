@@ -11,7 +11,6 @@ export default {
 		path: path.join(__dirname, '../dist'),
 		publicPath: '/'
 	},
-	target: 'web',
 	resolve: {
 		extensions: ['.js', '.jsx', '.ts', '.tsx',
 			'.html', '.css', '.less', '.sass', '.scss'],

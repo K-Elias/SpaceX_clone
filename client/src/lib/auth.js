@@ -28,3 +28,19 @@ export const refreshToken = () =>
 		credentials: 'include',
 		headers: { 'Content-Type': 'application/json' }
 	});
+
+export const isAuthenticated = token => {
+	return Axios({
+		method: 'POST',
+		url: '/verif_token',
+		withCredentials: true,
+		credentials: 'include',
+		headers: { 'Content-Type': 'application/json' },
+		data: { token }
+	})
+		.then(({ status }) => {
+			if (status === 200) return true;
+			return false;
+		})
+		.catch(() => false);
+};

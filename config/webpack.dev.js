@@ -16,8 +16,6 @@ export default webpackMerge(commonConfig, {
 	devtool: 'inline-source-map',
 	plugins: [
 		new HotModuleReplacementPlugin({}),
-		new SourceMapDevToolPlugin({
-			filename: '[file].map[query]'
-		})
+		new SourceMapDevToolPlugin({ filename: '[file].map[query]' })
 	]
 });

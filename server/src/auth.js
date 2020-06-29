@@ -97,4 +97,12 @@ export default app => {
 			})
 			.catch(error => res.status(404).json({ error }));
 	});
+
+	app.post('/verif_token', async (req, res) => {
+		if (!req.body.token || !req.cookies.gin) return res.status(401).send(false);
+		const payload = verify(req.body.token, ACCESS_KEY);
+		const user = await User.findOne({ id: payload.userId });
+		if (!user) return res.status(401).send(false);
+		return res.status(200).send(true);
+	});
 };

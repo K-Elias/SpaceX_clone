@@ -1,8 +1,10 @@
 import { useHistory } from 'react-router-dom';
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { colors, unit } from '../lib/styles';
+import { isAuthenticated } from '../lib/auth';
+import { UserContext } from '../App';
 import MenuItem from './menu-item';
 import LogoutButton from '../containers/logout-button';
 import HomeIcon from '../../public/assets/icons/home.svg';
@@ -10,20 +12,27 @@ import CartIcon from '../../public/assets/icons/cart.svg';
 import ProfileIcon from '../../public/assets/icons/profile.svg';
 
 export default () => {
+	const { token } = useContext(UserContext);
 	const history = useHistory();
+
+	const onLinkChange = async path => {
+		const res = await isAuthenticated(token);
+		const link = res ? path : '/login';
+		history.push(link);
+	};
 
 	return (
 		<Container>
 			<InnerContainer>
-				<MenuItem onClick={() => history.push('/launch')}>
+				<MenuItem onClick={() => onLinkChange('/launch')}>
 					<HomeIcon />
 					Home
 				</MenuItem>
-				<MenuItem onClick={() => history.push('/cart')}>
+				<MenuItem onClick={() => onLinkChange('/cart')}>
 					<CartIcon />
 					Cart
 				</MenuItem>
-				<MenuItem onClick={() => history.push('/profile')}>
+				<MenuItem onClick={() => onLinkChange('/profile')}>
 					<ProfileIcon />
 					Profile
 				</MenuItem>
