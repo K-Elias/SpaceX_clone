@@ -1,4 +1,4 @@
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -54,11 +54,12 @@ export const CardClassName = styled.div`
 `;
 
 const padding = unit * 2;
-const StyledLink = styled(props => <Link {...props} />)`
+const StyledLink = styled.a`
 	display: block;
 	h3 {
 		font-size: 20px;
 	}
+	cursor: pointer;
 	padding: ${unit * 4}px ${unit * 5}px;
 	border-radius: 7px;
 	color: white;

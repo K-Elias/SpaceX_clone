@@ -102,7 +102,7 @@ const Header = styled.header`
 	margin-bottom: 20px;
 `;
 
-const StyledLogo = styled(props => <Logo {...props} />)`
+const StyledLogo = styled(Logo)`
 	width: 56px;
 	height: 56px;
 	display: block;
@@ -110,7 +110,7 @@ const StyledLogo = styled(props => <Logo {...props} />)`
 	position: relative;
 `;
 
-const StyledCurve = styled(props => <Curve {...props} />)`
+const StyledCurve = styled(Curve)`
 	width: 100%;
 	height: 100%;
 	fill: ${colors.primary};
@@ -123,7 +123,7 @@ const Heading = styled.h1`
 	margin: ${unit * 2}px 0 ${unit * 3}px;
 `;
 
-const StyledRocket = styled(props => <Rocket {...props} />)`
+const StyledRocket = styled(Rocket)`
 	${svgClassName};
 	width: 250px;
 `;

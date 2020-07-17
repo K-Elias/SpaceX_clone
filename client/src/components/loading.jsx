@@ -10,7 +10,7 @@ const spin = keyframes`
   }
 `;
 
-const LoadingLogo = styled(props => <Logo {...props} />)`
+const LoadingLogo = styled(Logo)`
 	width: 64px;
 	height: 64px;
 	display: block;
