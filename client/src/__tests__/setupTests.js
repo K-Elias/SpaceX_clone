@@ -5,8 +5,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { UserContext } from '../App';
 
-const token =
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZWI4NmFjZGMzZjg4ZDIzOTc4NTljYzEiLCJpYXQiOjE1OTQ5ODQ0NjUsImV4cCI6MjQ1ODk4NDQ2NX0.KXwoGOmJ3Z6-1CNjkVDqGNRNicnTAK8E5v42kG-sihs';
+const token = 'random-token';
 
 const setToken = jest.fn();
 

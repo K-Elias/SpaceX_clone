@@ -1,1 +1,1 @@
-module.exports = 'icon-mock';
+export default 'icon-mock';
