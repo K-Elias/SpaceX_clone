@@ -23,7 +23,7 @@ LaunchDetail.propTypes = {
 	launch: PropTypes.object
 };
 
-const Card = styled(CardClassName)`
+const Card = styled(props => <CardClassName {...props} />)`
 	height: 365px;
 	margin-bottom: ${unit * 4}px;
 `;

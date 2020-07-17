@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router-dom';
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { UserContext } from '../App';
@@ -8,7 +8,7 @@ import { menuItemClassName } from '../components/menu-item';
 import ExitIcon from '../../public/assets/icons/exit.svg';
 
 export default () => {
-	const { setToken } = useContext(UserContext);
+	const { setToken } = React.useContext(UserContext);
 	const history = useHistory();
 
 	const handleClick = () => {

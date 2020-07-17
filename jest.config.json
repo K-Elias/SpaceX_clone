@@ -1,0 +1,21 @@
+{
+	"testRegex": ".*\\.test\\.js$",
+	"transform": {
+		"^.+\\.jsx?$": "babel-jest",
+		".+\\.(css|styl|svg|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
+	},
+	"moduleDirectories": [
+		"node_modules",
+		"src",
+		"public"
+	],
+	"moduleFileExtensions": [
+		"js",
+		"jsx"
+	],
+	"moduleNameMapper": {
+		".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
+		"\\.svg": "<rootDir>/client/__mocks__/svgrMock.js"
+	},
+	"verbose": true
+}

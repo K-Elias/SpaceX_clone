@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router-dom';
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { EntryPage, useForm, Button } from '../components';
@@ -15,7 +15,7 @@ const initialState = {
 
 const Login = () => {
 	const history = useHistory();
-	const { setToken } = useContext(UserContext);
+	const { setToken } = React.useContext(UserContext);
 
 	const onSubmit = () =>
 		login(values).then(({ data }) => {

@@ -4,7 +4,7 @@ import {
 	Switch,
 	Redirect
 } from 'react-router-dom';
-import React, { Fragment, useContext, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Footer, PageContainer, Loading } from '../components';
@@ -33,12 +33,12 @@ const Layout = ({ component: Component, ...rest }) => (
 );
 
 const PrivateRoute = props => {
-	const { token } = useContext(UserContext);
+	const { token } = React.useContext(UserContext);
 	return token ? <Layout {...props} /> : <Redirect to="/login" />;
 };
 
 const Pages = () => {
-	const { token, setToken } = useContext(UserContext);
+	const { token, setToken } = React.useContext(UserContext);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {

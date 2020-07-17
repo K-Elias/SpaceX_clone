@@ -1,5 +1,5 @@
 import { Link, useHistory } from 'react-router-dom';
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -16,7 +16,7 @@ export const getBackgroundImage = id =>
 	`url(${backgrounds[Number(id) % backgrounds.length]})`;
 
 const LaunchTile = ({ launch: { id, mission, rocket } }) => {
-	const { token } = useContext(UserContext);
+	const { token } = React.useContext(UserContext);
 	const history = useHistory();
 
 	const onLinkChange = async path => {
@@ -54,7 +54,7 @@ export const CardClassName = styled.div`
 `;
 
 const padding = unit * 2;
-const StyledLink = styled(Link)`
+const StyledLink = styled(props => <Link {...props} />)`
 	display: block;
 	h3 {
 		font-size: 20px;

@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router-dom';
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { colors, unit } from '../lib/styles';
@@ -12,7 +12,7 @@ import CartIcon from '../../public/assets/icons/cart.svg';
 import ProfileIcon from '../../public/assets/icons/profile.svg';
 
 export default () => {
-	const { token } = useContext(UserContext);
+	const { token } = React.useContext(UserContext);
 	const history = useHistory();
 
 	const onLinkChange = async path => {
@@ -51,7 +51,7 @@ const Container = styled.footer`
 	bottom: 0;
 `;
 
-const InnerContainer = styled.div`
+const InnerContainer = styled.span`
 	display: flex;
 	align-items: center;
 	max-width: 460px;
